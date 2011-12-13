@@ -1,0 +1,249 @@
+#include "gmml/gmml.h"
+
+#include "proto/BuildInfoPB.pb.h"
+#include "proto/BuildResultsPB.pb.h"
+
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <vector>
+
+#include <mpi.h>
+
+using namespace gmml;
+using namespace std;
+
+using molecular_dynamics::oligosaccharide_builder::BuildInfo;
+using molecular_dynamics::oligosaccharide_builder::BuildResults;
+
+std::vector<std::string>& split(const std::string& str, char delimiter,
+                                std::vector<std::string>& elements) {
+    std::stringstream ss(str);
+    std::string item;
+    while (getline(ss, item, delimiter))
+        elements.push_back(item);
+    return elements;
+}
+
+int get_index(vector<double>& vec, double number)  {
+    vector<double>::iterator it;
+    if ((it = std::find(vec.begin(), vec.end(), number)) == vec.end()) {
+        vec.push_back(number);
+        return vec.size() - 1;
+    }
+    return std::distance(vec.begin(), it);
+}
+
+struct SolvationInfo {
+    double distance;
+    double closeness;
+};
+
+
+
+int main(int argc, char *argv[]) {
+    int rank, size;
+    MPI_Init(&argc, &argv);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+
+
+    string gas_phase_minimize_file = 
+        "/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/min.in";
+    string solvated_minimize_file =
+        "/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/solvated_min.in";
+
+    add_path("/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/");
+    load_parameter_file("param_files/parm99.dat.mod");
+    load_parameter_file("param_files/Glycam_06g.dat");
+    load_prep_file("prep_files/Glycam_06.prep");
+    load_prep_file("prep_files/Neu5Gc_a_06.prep");
+    load_prep_file("prep_files/ACE.prep");
+    load_prep_file("prep_files/MEX.prep");
+    load_prep_file("prep_files/sulfate.prep");
+    load_library_file("library_files/all_amino94.lib");
+    load_library_file("library_files/tip3pbox.off");
+
+
+    
+
+    BuildInfo build_info;
+
+    std::fstream input(argv[1], ios::in | ios::binary);
+    if (!build_info.ParseFromIstream(&input)) {
+        return -2;
+    }
+
+    string glycan = build_info.glycan();
+
+    Structure *structure = glycam_build(glycan);
+    TorsionCombinationBuilder b(*structure);
+
+
+    for (int i = 0; i < build_info.linkage_size(); i++) {
+        const BuildInfo::Linkage& linkage = build_info.linkage(i);
+        for (int j = 0; j < linkage.phi_value_size(); j++)
+            b.add_phi_value(i, linkage.phi_value(j));
+        for (int j = 0; j < linkage.psi_value_size(); j++)
+            b.add_psi_value(i, linkage.psi_value(j));
+        for (int j = 0; j < linkage.omega_value_size(); j++)
+            b.add_omega_value(i, linkage.omega_value(j));
+    }
+
+
+    SolvationInfo *solvation_info = NULL;
+
+/* 
+    if (argc > 3) {
+        solvation_info = new SolvationInfo;
+        solvation_info->distance = convert_string<double>(string(argv[4]));
+        solvation_info->closeness = convert_string<double>(string(argv[5]));
+    }
+    
+    string arg2(argv[2]);
+    // It appears that the quotation mark is sometimes parsed as part of the
+    // argument and sometimes it isn't.
+    arg2.erase(std::remove(arg2.begin(), arg2.end(), '\"'), arg2.end());
+
+    vector<string> links;
+    split(arg2, ';', links);
+    vector<vector<string> > angles(links.size());
+    for (int i = 0; i < links.size(); i++)
+        split(links[i], ':', angles[i]);
+    for (int i = 0; i < angles.size(); i++) {
+        for (int j = 0; j < angles[i].size(); j++) {
+            vector<string> els;
+            split(angles[i][j], ',', els);
+            if (j == 0) {
+                for (int k = 0; k < els.size(); k++)
+                    b.add_phi_value(i, convert_string<double>(els[k]));
+            }
+            else if (j == 1) {
+                for (int k = 0; k < els.size(); k++)
+                    b.add_psi_value(i, convert_string<double>(els[k]));
+            }
+            else if (j == 2) {
+                for (int k = 0; k < els.size(); k++)
+                    b.add_omega_value(i, convert_string<double>(els[k]));
+            }
+        }
+    }
+
+    */
+
+    list<TCBStructure*> *structures = b.build();
+    list<TCBStructure*>::iterator it;
+    int index = 0;
+    for (it = structures->begin(); it != structures->end(); ++it) {
+        if (index++%size != rank) {
+            delete *it;
+            continue;
+        }
+
+        MinimizationResults *results =
+            (*it)->minimize(gas_phase_minimize_file);
+
+        if (solvation_info != NULL) {
+            LibraryFileStructure *b = build_library_file_structure("TIP3PBOX");
+            //cout << "solvating with parameters " << solvation_info->distance <<
+            //        " " << solvation_info->closeness << endl;
+            SolvatedStructure *ss = solvate(**it, *b, solvation_info->distance,
+                                            solvation_info->closeness);
+            ss->minimize(solvated_minimize_file);
+            ss->print_pdb_file(to_string(index) + ".pdb");
+            ss->print_coordinate_file(to_string(index) + ".rst");
+            ss->print_amber_top_file(to_string(index) + ".top");
+            delete ss;
+            delete b;
+        } else {
+            if (it == structures->begin())
+                (*it)->print_amber_top_file("structure.top");
+            (*it)->print_pdb_file(to_string(index) + ".pdb");
+            (*it)->print_coordinate_file(to_string(index) + ".rst"); 
+        }
+        delete *it;
+    }
+    delete structures;
+    delete structure;
+
+    if (rank == 0) {
+        
+        vector<vector<vector<double> > > *build_info = b.get_build_info();
+
+        //linkage_changes[i][j] is true if the ith linkage's phi/psi/omega (j)
+        //varies.    
+        int num_linkages = (*build_info)[0].size();
+        vector<vector<bool> > linkage_changes(num_linkages);
+        //phi_angles[i] is all the phi angles linkage i can take
+        vector<vector<double> > phi_angles(num_linkages);
+        vector<vector<double> > psi_angles(num_linkages);
+        vector<vector<double> > omega_angles(num_linkages);
+        for (int i = 0; i < build_info->size(); i++) {
+            const vector<vector<double> >& linkages = (*build_info)[i];
+            for (int j = 0; j < linkages.size(); j++) {
+                const vector<double>& linkage = linkages[j];
+                get_index(phi_angles[j], linkage[0]);
+                get_index(psi_angles[j], linkage[1]);
+                get_index(omega_angles[j], linkage[2]);
+            }
+        }
+
+        for (int i = 0; i < num_linkages; i++) {
+            linkage_changes[i].push_back(phi_angles[i].size() > 1);
+            linkage_changes[i].push_back(psi_angles[i].size() > 1);
+            linkage_changes[i].push_back(omega_angles[i].size() > 1);
+        }
+
+        BuildResults results;
+
+        for (int i = 0; i < build_info->size(); i++) {
+            BuildResults::Structure *structure = results.add_structure();
+
+            const vector<vector<double> >& linkages = (*build_info)[i];
+            for (int j = 0; j < linkages.size(); j++) {
+                const vector<double>& linkage = linkages[j];
+                for (int k = 0; k < linkage.size(); k++) {
+                    if (!linkage_changes[j][k])
+                        continue;
+
+                    BuildResults::FlexibleLinkage *flexible_linkage =
+                            structure->add_flexible_linkage();
+                    flexible_linkage->set_index(j);
+                    
+                    BuildResults::FlexibleLinkage::Angle type;
+                    if (k == 0)
+                        type = BuildResults::FlexibleLinkage::PHI;
+                    else if (k == 1)
+                        type = BuildResults::FlexibleLinkage::PSI;
+                    else if (k == 2)
+                        type = BuildResults::FlexibleLinkage::OMEGA;
+                    
+                    flexible_linkage->set_angle(type);
+
+                    flexible_linkage->set_value(linkage[k]);
+
+                    //structure.add_flexible_linkage(flexible_linkage);
+                    
+                    string angle("");
+                    if (k == 0)
+                        angle = "phi";
+                    else if (k == 1)
+                        angle = "psi";
+                    else if (k == 2)
+                        angle = "omega";
+                    //cout << j << ":" << angle << ":" << linkage[k] << " ";
+                }
+            }
+            //results.add_structure(structure);
+            //cout << endl;
+        }
+        delete build_info;
+
+        if (!results.SerializeToOstream(&cout)) {
+            cerr << "Failed to write protocol buffer" << endl;
+            return -1;
+        }
+    }
+    MPI_Finalize();
+    return 0;
+}

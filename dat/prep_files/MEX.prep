@@ -1,0 +1,17 @@
+    0    0    2
+
+O-Methyl RESP 0.010 HF/6-31G*//HF/6-31G*
+molecule.res
+MEX   INT 0
+CORRECT OMIT DU BEG
+0.233
+ 1 DUMM DU  M  0 -1 -2  0.000     0.0       0.0     0.0
+ 2 DUMM DU  M  1  0 -1  1.000     0.0       0.0     0.0
+ 3 DUMM DU  M  2  1  0  1.000     0.0       0.0     0.0
+ 4 H1   H1  M  3  2  1  1.000    90.0     180.0     0.0
+ 5 CH3  CG  M  4  3  2  1.085   109.5     180.0     0.233
+ 6 H2   H1  E  5  4  3  1.085   111.4      60.0     0.0
+ 7 H3   H1  E  5  4  3  1.085   111.4     -60.0     0.0
+
+DONE
+STOP

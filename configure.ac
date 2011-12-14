@@ -24,7 +24,7 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_CHECK_FUNCS([memset])
 
-AC_DEFINE_UNQUOTED([PROJECT_ROOT], ["$(pwd)"], [The root of the project.])
+AC_DEFINE_UNQUOTED([PROJECT_ROOT], ["$(pwd)/"], [The root of the project.])
 
 AC_SUBST([project_root], [$(pwd)])
 

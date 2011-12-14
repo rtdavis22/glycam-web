@@ -1,7 +1,14 @@
-SUBDIRS = deps/gmml deps/protobuf . src/cpp/
+SUBDIRS = deps/gmml deps/protobuf src/cpp/ .
 
 all-local:
 	$(MAKE) -C src/java
+	mkdir -p bin
+	mkdir -p lib
+	cp src/cpp/draw_glycan bin
+	cp src/cpp/getlinkages bin
+	cp src/cpp/validate_structure bin
+	cp src/cpp/mpi/build_torsions_mpi bin
+	cp src/java/target/glycam-web.jar lib
 
 clean-local:
 	$(MAKE) -C src/java clean

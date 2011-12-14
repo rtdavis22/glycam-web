@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -8,13 +10,13 @@ using namespace std;
 using namespace gmml;
 
 int main(int argc, char *argv[]) {
-    add_path("/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/prep_files");
+    add_path(PROJECT_ROOT);
     
-    load_prep_file("Glycam_06.prep");
-    load_prep_file("Neu5Gc_a_06.prep");
-    load_prep_file("sulfate.prep");
-    load_prep_file("ACE.prep");
-    load_prep_file("MEX.prep");
+    load_prep_file("prep_files/Glycam_06.prep");
+    load_prep_file("prep_files/Neu5Gc_a_06.prep");
+    load_prep_file("prep_files/sulfate.prep");
+    load_prep_file("prep_files/ACE.prep");
+    load_prep_file("prep_files/MEX.prep");
     
     string input(argv[1]);
   

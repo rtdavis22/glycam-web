@@ -1,5 +1,7 @@
 package cplusplus;
 
+import configuration.Configuration;
+
 import java.io.*; //remove
 import java.io.File;
 
@@ -7,8 +9,7 @@ public class CPP {
 
     public static String get_bin_path() { return path; }
 
-    private static String path =
-        "/opt/apache-tomcat-6.0.32/webapps/glycam-web/WEB-INF/cpp/bin/";
+    private static String path = Configuration.getProjectRoot() + "/bin/";
 
     //private static String path =
     //   new File(".").getAbsolutePath() + "/cpp/bin/";

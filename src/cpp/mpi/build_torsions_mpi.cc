@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "gmml/gmml.h"
 
 #include "BuildInfoPB.pb.h"
@@ -49,14 +51,11 @@ int main(int argc, char *argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
-    cout << PROJECT_ROOT << endl;
+    add_path(string(PROJECT_ROOT) + "dat");
 
-    string gas_phase_minimize_file = 
-        "/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/min.in";
-    string solvated_minimize_file =
-        "/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/solvated_min.in";
+    string gas_phase_minimize_file = "min.in";
+    string solvated_minimize_file = "solvated_min.in";
 
-    add_path("/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/");
     load_parameter_file("param_files/parm99.dat.mod");
     load_parameter_file("param_files/Glycam_06g.dat");
     load_prep_file("prep_files/Glycam_06.prep");
@@ -95,44 +94,6 @@ int main(int argc, char *argv[]) {
 
 
     SolvationInfo *solvation_info = NULL;
-
-/* 
-    if (argc > 3) {
-        solvation_info = new SolvationInfo;
-        solvation_info->distance = convert_string<double>(string(argv[4]));
-        solvation_info->closeness = convert_string<double>(string(argv[5]));
-    }
-    
-    string arg2(argv[2]);
-    // It appears that the quotation mark is sometimes parsed as part of the
-    // argument and sometimes it isn't.
-    arg2.erase(std::remove(arg2.begin(), arg2.end(), '\"'), arg2.end());
-
-    vector<string> links;
-    split(arg2, ';', links);
-    vector<vector<string> > angles(links.size());
-    for (int i = 0; i < links.size(); i++)
-        split(links[i], ':', angles[i]);
-    for (int i = 0; i < angles.size(); i++) {
-        for (int j = 0; j < angles[i].size(); j++) {
-            vector<string> els;
-            split(angles[i][j], ',', els);
-            if (j == 0) {
-                for (int k = 0; k < els.size(); k++)
-                    b.add_phi_value(i, convert_string<double>(els[k]));
-            }
-            else if (j == 1) {
-                for (int k = 0; k < els.size(); k++)
-                    b.add_psi_value(i, convert_string<double>(els[k]));
-            }
-            else if (j == 2) {
-                for (int k = 0; k < els.size(); k++)
-                    b.add_omega_value(i, convert_string<double>(els[k]));
-            }
-        }
-    }
-
-    */
 
     list<TCBStructure*> *structures = b.build();
     list<TCBStructure*>::iterator it;
@@ -224,8 +185,6 @@ int main(int argc, char *argv[]) {
                     flexible_linkage->set_angle(type);
 
                     flexible_linkage->set_value(linkage[k]);
-
-                    //structure.add_flexible_linkage(flexible_linkage);
                     
                     string angle("");
                     if (k == 0)
@@ -234,11 +193,8 @@ int main(int argc, char *argv[]) {
                         angle = "psi";
                     else if (k == 2)
                         angle = "omega";
-                    //cout << j << ":" << angle << ":" << linkage[k] << " ";
                 }
             }
-            //results.add_structure(structure);
-            //cout << endl;
         }
         delete build_info;
 

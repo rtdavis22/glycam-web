@@ -4,10 +4,10 @@ all-local:
 	$(MAKE) -C src/java
 	mkdir -p bin
 	mkdir -p lib
-	cp src/cpp/draw_glycan bin
-	cp src/cpp/getlinkages bin
-	cp src/cpp/validate_structure bin
-	cp src/cpp/mpi/build_torsions_mpi bin
+	cd bin && ln -fs ../src/cpp/draw_glycan draw_glycan
+	cd bin && ln -fs ../src/cpp/getlinkages getlinkages
+	cd bin && ln -fs ../src/cpp/validate_structure validate_structure
+	cd bin && ln -fs ../src/cpp/mpi/build_torsions_mpi build_torsions_mpi
 	cp src/java/target/glycam-web.jar lib
 
 clean-local:
@@ -18,6 +18,7 @@ MAINTAINERCLEANFILES = \
   config.guess \
   config.h \
   config.h.in \
+  config.h.in~ \
   config.log \
   config.status \
   config.sub \

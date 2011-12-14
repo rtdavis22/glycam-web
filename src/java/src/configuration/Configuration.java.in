@@ -1,0 +1,9 @@
+package configuration;
+
+public class Configuration {
+
+    private static final String projectRoot = "@project_root@";
+
+    public static String getProjectRoot() { return projectRoot; }
+
+}

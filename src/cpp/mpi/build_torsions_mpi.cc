@@ -1,7 +1,7 @@
 #include "gmml/gmml.h"
 
-#include "proto/BuildInfoPB.pb.h"
-#include "proto/BuildResultsPB.pb.h"
+#include "BuildInfoPB.pb.h"
+#include "BuildResultsPB.pb.h"
 
 #include <algorithm>
 #include <fstream>
@@ -9,6 +9,8 @@
 #include <vector>
 
 #include <mpi.h>
+
+#include "config.h"
 
 using namespace gmml;
 using namespace std;
@@ -47,6 +49,7 @@ int main(int argc, char *argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
 
+    cout << PROJECT_ROOT << endl;
 
     string gas_phase_minimize_file = 
         "/opt/apache-tomcat-6.0.32/webapps/glycam-web/amber/min.in";

@@ -1,0 +1,21 @@
+package molecular_dynamics.oligosaccharide_builder;
+
+message BuildResults {
+    message FlexibleLinkage {
+        enum Angle {
+            PHI = 0;
+            PSI = 1;
+            OMEGA = 2;
+        }
+
+        required int32 index = 1;
+        required Angle angle = 2;
+        required double value = 3;
+    }
+
+    message Structure {
+        repeated FlexibleLinkage flexible_linkage = 1;
+    }
+
+    repeated Structure structure = 1;
+}

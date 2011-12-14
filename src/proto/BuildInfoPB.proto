@@ -1,0 +1,26 @@
+package molecular_dynamics.oligosaccharide_builder;
+
+message BuildInfo {
+    message Linkage {
+        repeated double phi_value = 1;
+        repeated double psi_value = 2;
+        repeated double omega_value = 3;
+    }
+
+    required string glycan = 1;
+
+    repeated Linkage linkage = 2;
+
+    optional SolvationInfo solvation_info = 3;
+}
+
+message SolvationInfo {
+    enum Shape {
+        CUBIC = 0;
+        RECTANGULAR = 1;
+    }
+
+    required Shape shape = 1 [default = CUBIC];
+    required double distance = 2;
+    required double closeness = 3;
+}

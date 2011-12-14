@@ -39,7 +39,7 @@ JAVA_FILES = \
 JFLAGS = -classpath $(PROTO_JAR)
 
 $(CLASS_DEST)/%.class: src/%.java $(PROTO_JAR)
-	mkdir -p target
+	mkdir -p $(CLASS_DEST)
 	javac $(JFLAGS) -d $(CLASS_DEST) $(JAVA_FILES)
 
 CLASS_FILES = \

@@ -12,6 +12,7 @@ all-local:
 
 clean-local:
 	$(MAKE) -C src/java clean
+	rm -rf bin lib
 
 MAINTAINERCLEANFILES = \
   aclocal.m4 \

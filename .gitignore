@@ -1,4 +1,6 @@
+bin
 deps
+lib
 aclocal.m4
 config.guess
 config.h

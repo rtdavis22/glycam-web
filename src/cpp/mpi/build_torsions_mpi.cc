@@ -1,3 +1,16 @@
+// Author: Robert Davis
+//
+// This program takes as a command-line argument a protocol buffer that includes a glycan sequence
+// in condensed GLYCAM nomenclature, a list of linkage values indicating the possible phi, psi,
+// and omega values for each linkages, and, optionally, solvation information. It builds all
+// structures conforming to the specified glycosidic torsions and outputs an AMBER topology file and
+// restart and pdb files for each structure to the current directory. The topology file is named
+// "structure.top", and the restart and pdb file names start with a 1-based index for the structure
+// followed by ".rst" or ".pdb". 
+// The program writes a protocol buffer to standard output that represents the results of the
+// build. This includes, for each structure, a list of all the custom glycosidic torsion values set
+// within the structure and the resulting minimized energy of the structure.
+
 #include "config.h"
 
 #include "gmml/gmml.h"
@@ -6,8 +19,8 @@
 #include "BuildResultsPB.pb.h"
 
 #include <algorithm>
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <vector>
 
 #include <mpi.h>
@@ -43,10 +56,9 @@ struct SolvationInfo {
     double closeness;
 };
 
-
-
 int main(int argc, char *argv[]) {
     int rank, size;
+    MPI_Status stat;
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -65,9 +77,6 @@ int main(int argc, char *argv[]) {
     load_prep_file("prep_files/sulfate.prep");
     load_library_file("library_files/all_amino94.lib");
     load_library_file("library_files/tip3pbox.off");
-
-
-    
 
     BuildInfo build_info;
 
@@ -99,7 +108,7 @@ int main(int argc, char *argv[]) {
     list<TCBStructure*>::iterator it;
     int index = 0;
     for (it = structures->begin(); it != structures->end(); ++it) {
-        if (index++%size != rank) {
+        if (index++%(size - 1) + 1 != rank) {
             delete *it;
             continue;
         }
@@ -125,20 +134,24 @@ int main(int argc, char *argv[]) {
             (*it)->print_pdb_file(to_string(index) + ".pdb");
             (*it)->print_coordinate_file(to_string(index) + ".rst"); 
         }
+
+        double vals[1];
+        vals[0] = results->energy;
+        MPI_Send(vals, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
+
         delete *it;
     }
     delete structures;
     delete structure;
 
     if (rank == 0) {
-        
         vector<vector<vector<double> > > *build_info = b.get_build_info();
 
-        //linkage_changes[i][j] is true if the ith linkage's phi/psi/omega (j)
-        //varies.    
+        // linkage_changes[i][j] is true if the ith linkage's phi/psi/omega (j)
+        // varies.    
         int num_linkages = (*build_info)[0].size();
         vector<vector<bool> > linkage_changes(num_linkages);
-        //phi_angles[i] is all the phi angles linkage i can take
+        // phi_angles[i] is all the phi angles linkage i can take
         vector<vector<double> > phi_angles(num_linkages);
         vector<vector<double> > psi_angles(num_linkages);
         vector<vector<double> > omega_angles(num_linkages);
@@ -162,6 +175,11 @@ int main(int argc, char *argv[]) {
 
         for (int i = 0; i < build_info->size(); i++) {
             BuildResults::Structure *structure = results.add_structure();
+
+            double in[1];
+            MPI_Recv(in, 1, MPI_DOUBLE, i%(size - 1) + 1, 0, MPI_COMM_WORLD,
+                     &stat);
+            structure->set_energy(in[0]);
 
             const vector<vector<double> >& linkages = (*build_info)[i];
             for (int j = 0; j < linkages.size(); j++) {

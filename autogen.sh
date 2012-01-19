@@ -26,6 +26,20 @@ if test ! -e configure; then
 fi
 cd ../..
 
+if test ! -e deps/mysql-connector-java; then
+  name="mysql-connector-java"
+  version="5.1.18"
+  tar_name=$name-$version.tar.gz
+  echo "Fetching $name from the web"
+  wget http://dev.mysql.com/get/Downloads/Connector-J/$tar_name/from/ftp://mirror.anl.gov/pub/mysql/
+  tar -xvf $tar_name > /dev/null
+  rm $tar_name
+  mv $name-$version deps/$name
+  cd deps/$name
+  mv $name*.jar $name.jar
+  cd ../..
+fi
+
 autoreconf -f -i
 
 rm -rf autom4te.cache

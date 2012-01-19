@@ -1,14 +1,15 @@
 package molecular_dynamics;
 
+// This class includes parameters for solvation. It is suitable for use as a JavaBean,
 public class SolvationSettings {
-    public enum Shape { Rectangular, Cubic } 
+    public enum Shape { RECTANGULAR, CUBIC } 
 
     private double buffer; 
     private double closeness;
     private Shape shape;
 
     public SolvationSettings() {
-        this.shape = Shape.Rectangular;
+        this.shape = Shape.RECTANGULAR;
         this.buffer = 8.0;
         this.closeness = 0.2;
     }

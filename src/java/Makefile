@@ -9,8 +9,6 @@ PROTO_CMD = \
 
 PROTO_JAR = ../../deps/protobuf/java/target/protobuf-java-2.4.2-pre.jar
 
-MYSQL_JAR = ../../deps/mysql-connector-java/mysql-connector-java.jar
-
 all: $(PROTO_FILES) target/glycam-web.jar
 
 src/molecular_dynamics/oligosaccharide_builder/BuildInfoPB.java : \
@@ -40,11 +38,9 @@ JAVA_FILES = \
   src/molecular_dynamics/oligosaccharide_builder/ResultStructure.java \
   src/oligosaccharide_library/Item.java
 
-JFLAGS = -classpath $(PROTO_JAR):$(MYSQL_JAR)
+JFLAGS = -classpath $(PROTO_JAR)
 
-#remove this
-
-target/glycam-web.jar: $(JAVA_FILES) $(PROTO_JAR) $(MYSQL_JAR)
+target/glycam-web.jar: $(JAVA_FILES) $(PROTO_JAR)
 	mkdir -p $(CLASS_DEST)
 	javac $(JFLAGS) -d $(CLASS_DEST) $(JAVA_FILES)
 	cd $(CLASS_DEST) && jar cf $(@F) *

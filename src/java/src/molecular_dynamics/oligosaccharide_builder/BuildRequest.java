@@ -1,3 +1,5 @@
+// Author: Robert Davis
+
 package molecular_dynamics.oligosaccharide_builder;
 
 import molecular_dynamics.LinkageValues;
@@ -5,16 +7,32 @@ import molecular_dynamics.SolvationSettings;
 
 import molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
 import molecular_dynamics.oligosaccharide_builder.BuildResultsPB.BuildResults;
+import molecular_dynamics.oligosaccharide_builder.ResultStructure;
 
 import cplusplus.CPP;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.UUID;
 
 public class BuildRequest implements Runnable {
+    public class StructureComparator implements java.util.Comparator<ResultStructure> {
+        @Override
+        public int compare(ResultStructure lhs, ResultStructure rhs) {
+            double difference = rhs.getEnergy() - lhs.getEnergy();
+            if (difference == 0) {
+                return 0;
+            } else if (difference < 0) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
+    }
+
     // NOT_STARTED: run() has not been called yet.
     // WORKING: the build is in progress.
     // DONE: the build has successfully finished.
@@ -37,7 +55,7 @@ public class BuildRequest implements Runnable {
     // that linkage. The protocol buffer from the c++ process could be used directly but this
     // is a preferable data structure.
     // TODO: make a new class "ResultStructure", which contains a SortedMap<>.
-    private ArrayList<SortedMap<Integer, LinkageValues>> resultStructures;
+    private ArrayList<ResultStructure> resultStructures;
 
     // Pass in the target File in the constructor.
     public BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
@@ -59,7 +77,7 @@ public class BuildRequest implements Runnable {
         return count;
     }
 
-    public ArrayList<SortedMap<Integer, LinkageValues>> getResultStructures() {
+    public ArrayList<ResultStructure> getResultStructures() {
         return resultStructures;
     }
 
@@ -91,13 +109,45 @@ public class BuildRequest implements Runnable {
 
         resultStructures = parseResults(results);
 
+        // Sort the structures by energy, from lowest to highest.
+        java.util.Collections.sort(resultStructures, new StructureComparator());
+
+        renameFiles();
+
         status = Status.DONE;
     }
 
-    private ArrayList<SortedMap<Integer, LinkageValues>> parseResults(BuildResults results) {
-        ArrayList<SortedMap<Integer, LinkageValues>> resultStructures =
-                new ArrayList<SortedMap<Integer, LinkageValues>>();
+    // Rename the files according to the order of the result structures.
+    private void renameFiles() {
+        java.util.TreeMap<Integer, Integer> map = new java.util.TreeMap<Integer, Integer>();
+        for (int i = 0; i < resultStructures.size(); i++) {
+            map.put(resultStructures.get(i).getIndex(), i);
+        }
 
+        File[] files = outputDirectory.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            String[] tokens = name.split("\\.");
+            if (tokens.length == 2 && (tokens[1].equals("pdb") || tokens[1].equals("rst"))) {
+                int index = Integer.parseInt(tokens[0]) - 1;
+                int new_index = map.get(index) + 1;
+                file.renameTo(new File(outputDirectory, new_index + "." + tokens[1] + ".temp"));
+            }
+        }
+
+        files = outputDirectory.listFiles();
+        for (File file : files) {
+            String name = file.getName();
+            if (name.endsWith(".temp")) {
+                file.renameTo(new File(outputDirectory, name.substring(0, name.length() - 5)));
+            }
+        }
+    }
+
+    private ArrayList<ResultStructure> parseResults(BuildResults results) {
+        ArrayList<ResultStructure> resultStructures = new ArrayList<ResultStructure>();
+
+        int structureIndex = 0;
         for (BuildResults.Structure structure : results.getStructureList()) {
             SortedMap<Integer, LinkageValues> structureAngles =
                     new TreeMap<Integer, LinkageValues>();
@@ -121,7 +171,8 @@ public class BuildRequest implements Runnable {
                 else if (angleType == BuildResults.FlexibleLinkage.Angle.OMEGA)
                     angleValues.setOmega(value);
             }
-            resultStructures.add(structureAngles);
+            double energy = structure.getEnergy();
+            resultStructures.add(new ResultStructure(structureAngles, structureIndex++, energy));
         }
         return resultStructures;
     }

@@ -34,26 +34,17 @@ JAVA_FILES = \
   src/molecular_dynamics/oligosaccharide_builder/BuildInfoPB.java \
   src/molecular_dynamics/oligosaccharide_builder/BuildRequest.java \
   src/molecular_dynamics/oligosaccharide_builder/OligosaccharideSession.java \
-  src/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java
+  src/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java \
+  src/molecular_dynamics/oligosaccharide_builder/ResultStructure.java \
+  src/oligosaccharide_library/Item.java
 
 JFLAGS = -classpath $(PROTO_JAR)
 
-$(CLASS_DEST)/%.class: src/%.java $(PROTO_JAR)
+#remove this
+
+target/glycam-web.jar: $(JAVA_FILES) $(PROTO_JAR)
 	mkdir -p $(CLASS_DEST)
 	javac $(JFLAGS) -d $(CLASS_DEST) $(JAVA_FILES)
-
-CLASS_FILES = \
-  $(CLASS_DEST)/configuration/Configuration.class \
-  $(CLASS_DEST)/cplusplus/CPP.class \
-  $(CLASS_DEST)/molecular_dynamics/Linkage.class \
-  $(CLASS_DEST)/molecular_dynamics/LinkageValues.class \
-  $(CLASS_DEST)/molecular_dynamics/SolvationSettings.class \
-  $(CLASS_DEST)/molecular_dynamics/oligosaccharide_builder/BuildInfoPB.class \
-  $(CLASS_DEST)/molecular_dynamics/oligosaccharide_builder/BuildRequest.class \
-  $(CLASS_DEST)/molecular_dynamics/oligosaccharide_builder/OligosaccharideSession.class \
-  $(CLASS_DEST)/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.class
-  
-target/glycam-web.jar: $(CLASS_FILES)
 	cd $(CLASS_DEST) && jar cf $(@F) *
 	mv $(CLASS_DEST)/$(@F) $(@D)
 

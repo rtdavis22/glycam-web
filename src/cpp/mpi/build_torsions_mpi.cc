@@ -9,7 +9,8 @@
 // followed by ".rst" or ".pdb". 
 // The program writes a protocol buffer to standard output that represents the results of the
 // build. This includes, for each structure, a list of all the custom glycosidic torsion values set
-// within the structure and the resulting minimized energy of the structure.
+// within the structure and the resulting minimized energy of the structure. The order of the
+// structures in the protocol buffer corresponds to the indices of the file names.
 
 #include "config.h"
 

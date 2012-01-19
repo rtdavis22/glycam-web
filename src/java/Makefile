@@ -49,4 +49,4 @@ target/glycam-web.jar: $(JAVA_FILES) $(PROTO_JAR)
 clean:
 	rm -rf target
 	rm -f src/molecular_dynamics/oligosaccharide_builder/BuildInfoPB.java
-	rm -r src/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java
+	rm -f src/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java

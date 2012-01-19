@@ -1,9 +1,32 @@
+// Author: Robert Davis
+
 package configuration;
 
-public class Configuration {
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.Connection;
+import javax.sql.DataSource;
 
+// This class includes global configuration information.
+public class Configuration {
+    // The root directory of the project. This variable is put here by autoconf as a substitution
+    // variable. There may be a better way to do this that doesn't require reconfiguring the
+    // project whenever this file is modified.
     private static final String projectRoot = "@project_root@";
 
     public static String getProjectRoot() { return projectRoot; }
 
+    // Returns a connect to the data source represented by the given resource name. If there is an
+    // error, this returns null instead of throwing.
+    public static Connection getDataConnection(String resourceName) {
+        try {
+            Context initialContext = new InitialContext();
+            Context envContext = (Context)initialContext.lookup("java:comp/env");
+            DataSource dataSource = (DataSource)envContext.lookup(resourceName);
+            return ds.getConnection();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+    }
 }

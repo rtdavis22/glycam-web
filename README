@@ -4,7 +4,7 @@ To build:
 
 If you don't have a configure file, run 'sh autogen.sh'
 
-Note: building requires several tools:
+Note - building requires several tools:
     autoconf
     automake
     boost c++ headers

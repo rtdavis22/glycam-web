@@ -15,6 +15,7 @@ message BuildResults {
 
     message Structure {
         repeated FlexibleLinkage flexible_linkage = 1;
+        optional double energy = 2;
     }
 
     repeated Structure structure = 1;

@@ -2,9 +2,10 @@
 
 package configuration;
 
+import java.sql.Connection;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
-import javax.sql.Connection;
 import javax.sql.DataSource;
 
 // This class includes global configuration information.
@@ -23,7 +24,7 @@ public class Configuration {
             Context initialContext = new InitialContext();
             Context envContext = (Context)initialContext.lookup("java:comp/env");
             DataSource dataSource = (DataSource)envContext.lookup(resourceName);
-            return ds.getConnection();
+            return dataSource.getConnection();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;

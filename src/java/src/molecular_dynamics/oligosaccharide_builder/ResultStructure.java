@@ -18,17 +18,24 @@ public class ResultStructure {
     // The minimized energy of the structure.
     private double energy;
 
-    public ResultStructure(SortedMap<Integer, LinkageValues> angles, int index, double energy) {
+    // The Boltzmann probability
+    private double boltzmann;
+
+    public ResultStructure(SortedMap<Integer, LinkageValues> angles, int index, double energy,
+                           double boltzmann) {
         this.angles = angles;
         this.index = index;
         this.energy = energy;
+        this.boltzmann = boltzmann;
     }
 
     public SortedMap<Integer, LinkageValues> getAngles() { return angles; }
     public int getIndex() { return index; }
     public double getEnergy() { return energy; }
+    public double getBoltzmann() { return boltzmann; }
 
     public void setAngles(SortedMap<Integer, LinkageValues> angles) { this.angles = angles; }
     public void setIndex(int index) { this.index = index; }
     public void setEnergy(double energy) { this.energy = energy; }
+    public void setBoltzmann(double boltzmann) { this.boltzmann = boltzmann; }
 }

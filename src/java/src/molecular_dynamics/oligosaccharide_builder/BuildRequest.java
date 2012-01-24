@@ -112,6 +112,14 @@ public class BuildRequest implements Runnable {
         // Sort the structures by energy, from lowest to highest.
         java.util.Collections.sort(resultStructures, new StructureComparator());
 
+        if (resultStructures.size() > 0) {
+            double minEnergy = resultStructures.get(0).getEnergy();
+            double kT = 0.0019872041*300;
+            for (ResultStructure structure : resultStructures) {
+                structure.setBoltzmann(Math.exp((minEnergy - structure.getEnergy())/kT));
+            }
+        }
+
         renameFiles();
 
         status = Status.DONE;
@@ -172,7 +180,8 @@ public class BuildRequest implements Runnable {
                     angleValues.setOmega(value);
             }
             double energy = structure.getEnergy();
-            resultStructures.add(new ResultStructure(structureAngles, structureIndex++, energy));
+            // The last parameter is the Boltzmann probability. We'll put a dummy value in here.
+            resultStructures.add(new ResultStructure(structureAngles, structureIndex++, energy, 0));
         }
         return resultStructures;
     }

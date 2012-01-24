@@ -40,50 +40,23 @@ public class CPP {
     }
 
     public static Process exec(String command) throws IOException {
-        System.out.println("Execing command " + path + command);
-        return Runtime.getRuntime().exec(path + command);
+        return exec(command, null);
     }
 
     public static Process exec(String command, File dir) throws IOException {
         return Runtime.getRuntime().exec(path + command, null, dir);
     }
 
-    // should call the one below
     public static Process execMPI(String command, int numProcessors)
                                   throws java.io.IOException {
-        String fullCommand = "/programs/bin/mpirun -np " + numProcessors + " " + path + command;
-        return Runtime.getRuntime().exec(fullCommand);
+        return execMPI(command, numProcessors, null);
     }
 
     public static Process execMPI(String command, int numProcessors, java.io.File dir)
             throws java.io.IOException {
-        String fullCommand = "/programs/bin/mpirun -np " + numProcessors + " " + path + command;
-        System.out.println("Execing command " + fullCommand);
-        
-        return Runtime.getRuntime().exec(fullCommand, null, dir);
-    }
-
-    // This checks if a particular sequence in GLYCAM condensed nomenclature has correct syntax
-    // and can be built. If it does not, an error message is returned. Otherwise, an empty
-    // string is returned.
-    public static String validateStructure(String sequence) {
-        String defaultError = "Error in sequence";
-        try {
-            Process process = exec("validate_structure " + sequence);
-            if (process.waitFor() != 0) {
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line;
-                if ((line = reader.readLine()) != null)
-                    return line;
-                else
-                    return defaultError;
-            }
-        } catch (IOException e) {
-            return defaultError;
-        } catch (InterruptedException e) {
-            return defaultError;
-        }
-        return "";
+        String shellCommand = "mpirun -np " + numProcessors + " " + path + command;
+        String[] cmd = { "/bin/sh", "-c", shellCommand };
+ 
+        return Runtime.getRuntime().exec(cmd, null, dir);
     }
 }

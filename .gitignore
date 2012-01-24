@@ -17,4 +17,10 @@ Makefile
 Makefile.in
 missing
 stamp-h1
-
+config.h.in~
+.deps
+.libs
+*\.pb\.cc
+*\.pb\.h
+*\.o
+/src/java/target

@@ -36,7 +36,9 @@ JAVA_FILES = \
   src/molecular_dynamics/oligosaccharide_builder/OligosaccharideSession.java \
   src/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java \
   src/molecular_dynamics/oligosaccharide_builder/ResultStructure.java \
-  src/oligosaccharide_library/Item.java
+  src/oligosaccharide_library/Item.java \
+  src/org/glycam/Logging.java \
+  src/org/glycam/Sequence.java
 
 JFLAGS = -classpath $(PROTO_JAR)
 

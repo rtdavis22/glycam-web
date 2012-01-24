@@ -1,6 +1,6 @@
 package org.glycam;
 
-import cplusplus.CPP;
+import org.glycam.CPP;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

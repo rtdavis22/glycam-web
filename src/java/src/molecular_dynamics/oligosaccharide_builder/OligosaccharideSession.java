@@ -2,7 +2,7 @@ package molecular_dynamics.oligosaccharide_builder;
 
 import org.glycam.Logging;
 
-import cplusplus.CPP;
+import org.glycam.CPP;
 
 import molecular_dynamics.Linkage;
 import molecular_dynamics.SolvationSettings;

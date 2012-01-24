@@ -9,7 +9,7 @@ import molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
 import molecular_dynamics.oligosaccharide_builder.BuildResultsPB.BuildResults;
 import molecular_dynamics.oligosaccharide_builder.ResultStructure;
 
-import cplusplus.CPP;
+import org.glycam.CPP;
 
 import java.io.File;
 import java.io.FileOutputStream;

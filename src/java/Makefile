@@ -27,7 +27,6 @@ CLASS_DEST = target/class
 
 JAVA_FILES = \
   src/configuration/Configuration.java \
-  src/cplusplus/CPP.java \
   src/molecular_dynamics/Linkage.java \
   src/molecular_dynamics/LinkageValues.java \
   src/molecular_dynamics/SolvationSettings.java \
@@ -37,6 +36,7 @@ JAVA_FILES = \
   src/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java \
   src/molecular_dynamics/oligosaccharide_builder/ResultStructure.java \
   src/oligosaccharide_library/Item.java \
+  src/org/glycam/CPP.java \
   src/org/glycam/Logging.java \
   src/org/glycam/Sequence.java
 

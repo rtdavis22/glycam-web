@@ -1,6 +1,6 @@
 // Author: Robert Davis
 
-package cplusplus;
+package org.glycam;
 
 import configuration.Configuration;
 

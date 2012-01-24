@@ -1,5 +1,7 @@
 package molecular_dynamics.oligosaccharide_builder;
 
+import org.glycam.Logging;
+
 import cplusplus.CPP;
 
 import molecular_dynamics.Linkage;
@@ -26,6 +28,7 @@ public class OligosaccharideSession {
     private BuildRequest buildRequest;
 
     public OligosaccharideSession(String structure) throws java.io.IOException {
+        Logging.logger.severe("SEVER MESSAGE");
         this.structure = structure;
         initLinkages(structure);
         solvationSettings = null;

@@ -10,3 +10,5 @@ Note - building requires several tools:
     boost c++ headers
     libtool
     maven
+    mpicxx
+    mpirun

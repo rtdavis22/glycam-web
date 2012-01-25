@@ -1,6 +1,6 @@
 package molecular_dynamics;
 
-// This class includes parameters for solvation. It is suitable for use as a JavaBean,
+// This class includes parameters for solvation. It is suitable for use as a JavaBean.
 public class SolvationSettings {
     public enum Shape { RECTANGULAR, CUBIC } 
 

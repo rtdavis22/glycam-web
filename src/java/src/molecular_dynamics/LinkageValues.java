@@ -1,6 +1,6 @@
 package molecular_dynamics;
 
-// This class is intended to be used as a bean.
+// This class is intended to be used as a JavaBean.
 public class LinkageValues {
     private double phi;
     private double psi;

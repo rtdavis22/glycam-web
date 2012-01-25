@@ -2,6 +2,7 @@ package molecular_dynamics;
 
 import java.util.ArrayList;
 
+// This class is suitable for use as a JavaBean.
 public class Linkage {
     private String name;
     private boolean flexibleOmega;

@@ -1,8 +1,7 @@
 package molecular_dynamics.oligosaccharide_builder;
 
-import org.glycam.Logging;
-
 import org.glycam.CPP;
+import org.glycam.Logging;
 
 import molecular_dynamics.Linkage;
 import molecular_dynamics.SolvationSettings;
@@ -28,7 +27,6 @@ public class OligosaccharideSession {
     private BuildRequest buildRequest;
 
     public OligosaccharideSession(String structure) throws java.io.IOException {
-        Logging.logger.severe("SEVER MESSAGE");
         this.structure = structure;
         initLinkages(structure);
         solvationSettings = null;
@@ -61,7 +59,7 @@ public class OligosaccharideSession {
         solvationSettings = options;
     }
 
-    // Modify this to use protocol buffers.
+    // TODO: Modify this to use protocol buffers.
     private void initLinkages(String structure) throws java.io.IOException {
         linkages = new ArrayList<Linkage>();
         boolean valid = true;
@@ -96,10 +94,11 @@ public class OligosaccharideSession {
                 linkages.add(linkage);
             }
         } catch (java.io.IOException e) {
-            //handle this in some way
+            Logging.logger.severe(e.getMessage());
             throw e;
-        } catch(InterruptedException e) {}
-        
+        } catch(InterruptedException e) {
+            Logging.logger.severe(e.getMessage());
+        }
     }
 
     public int getTotalStructureCount() {
@@ -132,6 +131,7 @@ public class OligosaccharideSession {
     }
 
     // Remove this.
+   /*
     public String getLinkageString() {
         String ret = "";
         if (linkages.size() > 0)
@@ -141,6 +141,7 @@ public class OligosaccharideSession {
         }
         return ret;
     }
+*/
 
     private BuildInfo buildProtocolBuffer() {
         BuildInfo.Builder info = BuildInfo.newBuilder();

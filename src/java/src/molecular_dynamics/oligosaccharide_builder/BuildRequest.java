@@ -10,6 +10,7 @@ import molecular_dynamics.oligosaccharide_builder.BuildResultsPB.BuildResults;
 import molecular_dynamics.oligosaccharide_builder.ResultStructure;
 
 import org.glycam.CPP;
+import org.glycam.Logging;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -98,11 +99,13 @@ public class BuildRequest implements Runnable {
             Process process = CPP.execMPI(command, 16, outputDirectory);
             results = BuildResults.parseFrom(process.getInputStream());
             tempFile.delete();
-            System.out.println("process exited with value " + process.waitFor());
+            Logging.logger.info("process exited with value " + process.waitFor());
         } catch(IOException e) {
+            Logging.logger.severe(e.getMessage());
             status = Status.ERROR;
             return;
         } catch(InterruptedException e) {
+            Logging.logger.severe(e.getMessage());
             status = Status.ERROR;
             return;
         }
@@ -114,6 +117,7 @@ public class BuildRequest implements Runnable {
 
         if (resultStructures.size() > 0) {
             double minEnergy = resultStructures.get(0).getEnergy();
+            // Boltzmann's constant times temperature
             double kT = 0.0019872041*300;
             for (ResultStructure structure : resultStructures) {
                 structure.setBoltzmann(Math.exp((minEnergy - structure.getEnergy())/kT));

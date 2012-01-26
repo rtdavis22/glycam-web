@@ -1,6 +1,8 @@
 // Author: Robert Davis
 
-package configuration;
+package org.glycam.data;
+
+import org.glycam.Logging;
 
 import java.sql.Connection;
 
@@ -9,13 +11,10 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 // This class includes global configuration information.
-public class Configuration {
-    // The root directory of the project. This variable is put here by autoconf as a substitution
-    // variable. There may be a better way to do this that doesn't require reconfiguring the
-    // project whenever this file is modified.
-    private static final String projectRoot = "@project_root@";
-
-    public static String getProjectRoot() { return projectRoot; }
+public class DatabaseUtils {
+    private DatabaseUtils() {
+        throw new AssertionError();
+    }
 
     // Returns a connect to the data source represented by the given resource name. If there is an
     // error, this returns null instead of throwing.
@@ -26,8 +25,8 @@ public class Configuration {
             DataSource dataSource = (DataSource)envContext.lookup(resourceName);
             return dataSource.getConnection();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return null;
+            Logging.logger.severe(e.getMessage());
         }
+        return null;
     }
 }

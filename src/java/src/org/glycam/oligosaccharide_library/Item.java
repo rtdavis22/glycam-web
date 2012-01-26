@@ -1,6 +1,6 @@
 // Author: Robert Davis
 
-package oligosaccharide_library;
+package org.glycam.oligosaccharide_library;
 
 // This class represents a structure in the oligosaccharide library. It is suitable for use as
 // a JavaBean.

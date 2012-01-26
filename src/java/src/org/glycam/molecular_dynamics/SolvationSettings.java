@@ -1,4 +1,4 @@
-package molecular_dynamics;
+package org.glycam.molecular_dynamics;
 
 // This class includes parameters for solvation. It is suitable for use as a JavaBean.
 public class SolvationSettings {

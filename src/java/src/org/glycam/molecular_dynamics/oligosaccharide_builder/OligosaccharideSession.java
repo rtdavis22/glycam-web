@@ -1,11 +1,10 @@
-package molecular_dynamics.oligosaccharide_builder;
+package org.glycam.molecular_dynamics.oligosaccharide_builder;
 
+import org.glycam.molecular_dynamics.Linkage;
+import org.glycam.molecular_dynamics.SolvationSettings;
+import org.glycam.molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
 import org.glycam.CPP;
 import org.glycam.Logging;
-
-import molecular_dynamics.Linkage;
-import molecular_dynamics.SolvationSettings;
-import molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
 
 import java.io.File;
 import java.io.BufferedReader;

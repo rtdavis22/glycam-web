@@ -31,7 +31,7 @@ AC_SUBST([project_root], [$(pwd)])
 AC_CONFIG_FILES([Makefile
                  src/cpp/Makefile
                  src/cpp/mpi/Makefile
-                 src/java/src/configuration/Configuration.java])
+                 src/java/src/org/glycam/configuration/Configuration.java])
 
 AC_CONFIG_SUBDIRS([deps/gmml
                    deps/protobuf])

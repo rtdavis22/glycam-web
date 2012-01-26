@@ -1,4 +1,5 @@
 package molecular_dynamics.oligosaccharide_builder;
+option java_package = "org.glycam.molecular_dynamics.oligosaccharide_builder";
 
 message BuildResults {
     message FlexibleLinkage {

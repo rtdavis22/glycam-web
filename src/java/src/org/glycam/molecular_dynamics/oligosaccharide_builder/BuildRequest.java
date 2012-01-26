@@ -1,16 +1,13 @@
 // Author: Robert Davis
 
-package molecular_dynamics.oligosaccharide_builder;
-
-import molecular_dynamics.LinkageValues;
-import molecular_dynamics.SolvationSettings;
-
-import molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
-import molecular_dynamics.oligosaccharide_builder.BuildResultsPB.BuildResults;
-import molecular_dynamics.oligosaccharide_builder.ResultStructure;
+package org.glycam.molecular_dynamics.oligosaccharide_builder;
 
 import org.glycam.CPP;
 import org.glycam.Logging;
+import org.glycam.molecular_dynamics.LinkageValues;
+import org.glycam.molecular_dynamics.SolvationSettings;
+import org.glycam.molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
+import org.glycam.molecular_dynamics.oligosaccharide_builder.BuildResultsPB.BuildResults;
 
 import java.io.File;
 import java.io.FileOutputStream;

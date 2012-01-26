@@ -1,4 +1,4 @@
-package molecular_dynamics;
+package org.glycam.molecular_dynamics;
 
 import java.util.ArrayList;
 

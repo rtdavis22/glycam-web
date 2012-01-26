@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
         }
 
         double vals[1];
-        vals[0] = results->energy;
+        vals[0] = (results != NULL)?results->energy:-1;
         MPI_Send(vals, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 
         delete *it;

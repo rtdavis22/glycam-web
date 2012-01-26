@@ -1,8 +1,8 @@
 // Author: Robert Davis
 
-package molecular_dynamics.oligosaccharide_builder;
+package org.glycam.molecular_dynamics.oligosaccharide_builder;
 
-import molecular_dynamics.LinkageValues;
+import org.glycam.molecular_dynamics.LinkageValues;
 
 import java.util.SortedMap;
 

@@ -1,4 +1,4 @@
-package molecular_dynamics;
+package org.glycam.molecular_dynamics;
 
 // This class is intended to be used as a JavaBean.
 public class LinkageValues {

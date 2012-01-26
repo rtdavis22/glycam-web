@@ -1,0 +1,22 @@
+package molecular_dynamics.glycoprotein_builder;
+option java_package = "org.glycam.molecular_dynamics.glycoprotein_builder";
+
+message PdbInfo {
+    repeated PdbResidueInfo his_residue = 1;
+    repeated CYSPair close_cys_pair = 2;
+    repeated PdbResidueInfo asn_residue = 3;
+}
+
+message PdbResidueInfo {
+    required int32 index = 1;
+    required string chain_id = 2;
+    required int32 res_num = 3;
+    required string i_code = 4;
+    required string mapped_name = 5 [default = ""];
+}
+
+message CYSPair {
+    required PdbResidueInfo cys1 = 1;
+    required PdbResidueInfo cys2 = 2;
+    required double distance = 3;
+}

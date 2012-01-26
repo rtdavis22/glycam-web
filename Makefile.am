@@ -6,6 +6,7 @@ all-local:
 	mkdir -p lib
 	cd bin && ln -fs ../src/cpp/draw_glycan draw_glycan
 	cd bin && ln -fs ../src/cpp/getlinkages getlinkages
+	cd bin && ln -fs ../src/cpp/get_pdb_info get_pdb_info
 	cd bin && ln -fs ../src/cpp/validate_structure validate_structure
 	cd bin && ln -fs ../src/cpp/mpi/build_torsions_mpi build_torsions_mpi
 	cp src/java/target/glycam-web.jar lib

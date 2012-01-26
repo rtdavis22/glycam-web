@@ -29,6 +29,7 @@
 #include "config.h"
 
 using namespace gmml;
+using namespace gmml::carbohydrate;
 using namespace std;
 
 using molecular_dynamics::oligosaccharide_builder::BuildInfo;
@@ -89,7 +90,7 @@ int main(int argc, char *argv[]) {
     string glycan = build_info.glycan();
 
     Structure *structure = glycam_build(glycan);
-    TorsionCombinationBuilder b(*structure);
+    GlycanConformationBuilder b(*structure);
 
 
     for (int i = 0; i < build_info.linkage_size(); i++) {
@@ -105,8 +106,8 @@ int main(int argc, char *argv[]) {
 
     SolvationInfo *solvation_info = NULL;
 
-    list<TCBStructure*> *structures = b.build();
-    list<TCBStructure*>::iterator it;
+    list<GCBStructure*> *structures = b.build();
+    list<GCBStructure*>::iterator it;
     int index = 0;
     for (it = structures->begin(); it != structures->end(); ++it) {
         if (index++%(size - 1) + 1 != rank) {

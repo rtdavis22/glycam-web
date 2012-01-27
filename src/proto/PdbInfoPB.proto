@@ -19,4 +19,5 @@ message CYSPair {
     required PdbResidueInfo cys1 = 1;
     required PdbResidueInfo cys2 = 2;
     required double distance = 3;
+    required bool bonded = 4;
 }

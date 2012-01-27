@@ -1,16 +1,19 @@
 // Author: Robert Davis
 //
-// This program takes as a command-line argument a protocol buffer that includes a glycan sequence
-// in condensed GLYCAM nomenclature, a list of linkage values indicating the possible phi, psi,
-// and omega values for each linkages, and, optionally, solvation information. It builds all
-// structures conforming to the specified glycosidic torsions and outputs an AMBER topology file and
-// restart and pdb files for each structure to the current directory. The topology file is named
-// "structure.top", and the restart and pdb file names start with a 1-based index for the structure
-// followed by ".rst" or ".pdb". 
-// The program writes a protocol buffer to standard output that represents the results of the
-// build. This includes, for each structure, a list of all the custom glycosidic torsion values set
-// within the structure and the resulting minimized energy of the structure. The order of the
-// structures in the protocol buffer corresponds to the indices of the file names.
+// This program takes as a command-line argument a protocol buffer that includes
+// a glycan sequence in condensed GLYCAM nomenclature, a list of linkage values
+// indicating the possible phi, psi, and omega values for each linkages, and,
+// optionally, solvation information. It builds all structures conforming to
+// the specified glycosidic torsions and outputs an AMBER topology file and
+// restart and pdb files for each structure to the current directory.
+// The topology file is named "structure.top", and the restart and pdb file
+// names start with a 1-based index for the structure followed by ".rst" or
+// ".pdb". The program writes a protocol buffer to standard output that
+// represents the results of the build. This includes, for each structure,
+// a list of all the custom glycosidic torsion values set within the structure
+// and the resulting minimized energy of the structure. The order of the
+// structures in the protocol buffer corresponds to the indices of the file
+// names.
 
 #include "config.h"
 
@@ -22,15 +25,20 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <vector>
 
 #include <mpi.h>
 
-#include "config.h"
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::list;
+using std::string;
+using std::vector;
 
 using namespace gmml;
 using namespace gmml::carbohydrate;
-using namespace std;
 
 using molecular_dynamics::oligosaccharide_builder::BuildInfo;
 using molecular_dynamics::oligosaccharide_builder::BuildResults;
@@ -82,7 +90,7 @@ int main(int argc, char *argv[]) {
 
     BuildInfo build_info;
 
-    std::fstream input(argv[1], ios::in | ios::binary);
+    std::fstream input(argv[1], std::ios::in | std::ios::binary);
     if (!build_info.ParseFromIstream(&input)) {
         return -2;
     }

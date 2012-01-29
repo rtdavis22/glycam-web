@@ -47,7 +47,8 @@ JAVA_FILES = \
   src/org/glycam/molecular_dynamics/oligosaccharide_builder/BuildResultsPB.java \
   src/org/glycam/molecular_dynamics/oligosaccharide_builder/ResultStructure.java \
   src/org/glycam/oligosaccharide_library/Item.java \
-  src/org/glycam/Sequence.java
+  src/org/glycam/Sequence.java \
+  src/org/glycam/Utils.java
 
 JFLAGS = -classpath $(PROTO_JAR)
 

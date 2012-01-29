@@ -24,11 +24,22 @@ using molecular_dynamics::glycoprotein_builder::CYSPair;
 using molecular_dynamics::glycoprotein_builder::PdbInfo;
 using molecular_dynamics::glycoprotein_builder::PdbResidueInfo;
 
+namespace {
+
+// This is the maximum distance that sulfurs in CYS residues can be in order
+// for a disulfide bond to be deemed "possible".
+const double kSulfurCutoff = 2.5;
+
+const char *kDefaultHISMapping = "HID";
+
+}
+
 void set_residue_info(PdbResidueInfo *info, int index, Triplet<int> *pdb_id) {
     info->set_index(index);
     info->set_chain_id(string(1, pdb_id->first));
     info->set_res_num(pdb_id->second);
     info->set_i_code(string(1, pdb_id->third));
+    info->set_mapped_name("");
 }
 
 void set_residue_info(PdbResidueInfo *info, PdbFileStructure::pdb_iterator it) {
@@ -36,9 +47,7 @@ void set_residue_info(PdbResidueInfo *info, PdbFileStructure::pdb_iterator it) {
 }
 
 void add_close_cys_residues(PdbFileStructure *structure, PdbInfo *info) {
-    double CYS_cutoff = 2.5;
-
-    CoordinateGrid<Triplet<int>*> grid(CYS_cutoff);
+    CoordinateGrid<Triplet<int>*> grid(kSulfurCutoff);
     for (PdbFileStructure::pdb_iterator it = structure->pdb_begin();
             it != structure->pdb_end(); ++it) {
         const Residue *residue = structure->residues(it->second);
@@ -75,22 +84,22 @@ void add_close_cys_residues(PdbFileStructure *structure, PdbInfo *info) {
                 continue;
             int other_sulfur_index =
                     structure->get_atom_index(other_residue_index, "SG");
+            // The second check is to make sure we don't double-count.
             if (other_sulfur_index == -1 || other_sulfur_index < sulfur_index)
                 continue;
             Atom *other_sulfur = structure->atoms(other_sulfur_index);
             double distance = measure(other_sulfur->coordinate(),
                                       sulfur->coordinate());
-            if (distance < CYS_cutoff) {
+            if (distance < kSulfurCutoff) {
                 CYSPair *cys_pair = info->add_close_cys_pair();
                 PdbResidueInfo *residue1_info = cys_pair->mutable_cys1();
-                residue1_info = new PdbResidueInfo;
                 set_residue_info(residue1_info, it);
                 PdbResidueInfo *residue2_info = cys_pair->mutable_cys2();
-                residue2_info = new PdbResidueInfo;
                 set_residue_info(residue2_info, other_residue_index, pdb_id);
                 cys_pair->set_distance(distance);
-                // Do this!:
-                //cys_pair->set_bonded();
+                bool bonded = structure->is_bonded(sulfur_index,
+                                                   other_sulfur_index);
+                cys_pair->set_bonded(bonded);
             }
         }
     }
@@ -113,6 +122,7 @@ int main(int argc, char *argv[]) {
         if (residue->name() == "HIS") {
             PdbResidueInfo *residue_info = info.add_his_residue();
             set_residue_info(residue_info, it);
+            residue_info->set_mapped_name(kDefaultHISMapping);
         }
     }
 

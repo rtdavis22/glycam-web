@@ -1,6 +1,6 @@
 SUBDIRS = . ./mpi
 
-bin_PROGRAMS = draw_glycan getlinkages validate_structure get_pdb_info
+bin_PROGRAMS = draw_glycan getlinkages validate_structure validate_pdb get_pdb_info
 
 BUILT_SOURCES = \
   PdbInfoPB.pb.cc \
@@ -22,6 +22,10 @@ getlinkages_LDADD = $(top_builddir)/deps/gmml/libgmml.a
 validate_structure_SOURCES = validate_structure.cc
 validate_structure_CPPFLAGS = -I$(top_builddir)/deps/gmml/include
 validate_structure_LDADD = $(top_builddir)/deps/gmml/libgmml.a
+
+validate_pdb_SOURCES = validate_pdb.cc
+validate_pdb_CPPFLAGS = -I$(top_builddir)/deps/gmml/include
+validate_pdb_LDADD = $(top_builddir)/deps/gmml/libgmml.a
 
 get_pdb_info_SOURCES = PdbInfoPB.pb.cc PdbInfoPB.pb.h get_pdb_info.cc
 

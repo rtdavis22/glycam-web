@@ -27,16 +27,16 @@
  "TYR"
  "VAL"
 !entry.ALA.unit.atoms table  str name  str type  int typex  int resx  int flags  int seq  int elmnt  dbl chg
- N N 0 1 131072 1 7 -0.415700
- H H 0 1 131072 2 1 0.271900
- CA CT 0 1 131072 3 6 0.033700
- HA H1 0 1 131072 4 1 0.082300
- CB CT 0 1 131072 5 6 -0.182500
- HB1 HC 0 1 131072 6 1 0.060300
- HB2 HC 0 1 131072 7 1 0.060300
- HB3 HC 0 1 131072 8 1 0.060300
- C C 0 1 131072 9 6 0.597300
- O O 0 1 131072 10 8 -0.567900
+ "N" "N" 0 1 131072 1 7 -0.415700
+ "H" "H" 0 1 131072 2 1 0.271900
+ "CA" "CT" 0 1 131072 3 6 0.033700
+ "HA" "H1" 0 1 131072 4 1 0.082300
+ "CB" "CT" 0 1 131072 5 6 -0.182500
+ "HB1" "HC" 0 1 131072 6 1 0.060300
+ "HB2" "HC" 0 1 131072 7 1 0.060300
+ "HB3" "HC" 0 1 131072 8 1 0.060300
+ "C" "C" 0 1 131072 9 6 0.597300
+ "O" "O" 0 1 131072 10 8 -0.567900
 !entry.ALA.unit.atomspertinfo table  str pname  str ptype  int ptypex  int pelmnt  dbl pchg
  "N" "N" 0 -1 0.0
  "H" "H" 0 -1 0.0
@@ -84,16 +84,16 @@
 !entry.ALA.unit.name single str
  "ALA"
 !entry.ALA.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  3.877484 3.115795 2.131197
  4.075059 4.623017 1.205786
  2.496995 3.801075 1.241379
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.ALA.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 9 0 0 0 0
 !entry.ALA.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -231,9 +231,9 @@
 !entry.ARG.unit.name single str
  "ARG"
 !entry.ARG.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -253,8 +253,8 @@
  5.006254 9.201287 3.286991
  5.604855 9.375325 2.492329
  4.892216 9.903045 4.004368
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.ARG.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 23 0 0 0 0
 !entry.ARG.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -362,9 +362,9 @@
 !entry.ASH.unit.name single str
  "ASH"
 !entry.ASH.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -373,8 +373,8 @@
  3.669108 5.954940 0.620011
  5.407731 5.091879 1.740667
  5.742902 5.987179 1.652920
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.ASH.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 12 0 0 0 0
 !entry.ASH.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -475,9 +475,9 @@
 !entry.ASN.unit.name single str
  "ASN"
 !entry.ASN.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -487,8 +487,8 @@
  3.984885 5.817909 2.265917
  4.408015 6.733702 2.314743
  3.359611 5.504297 2.994464
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.ASN.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 13 0 0 0 0
 !entry.ASN.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -582,9 +582,9 @@
 !entry.ASP.unit.name single str
  "ASP"
 !entry.ASP.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -592,8 +592,8 @@
  4.275101 5.011380 1.194527
  3.669108 5.954940 0.620011
  5.407731 5.091879 1.740667
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.ASP.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 11 0 0 0 0
 !entry.ASP.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -677,16 +677,16 @@
 !entry.CYM.unit.name single str
  "CYM"
 !entry.CYM.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  3.877484 3.115795 2.131197
  2.496995 3.801075 1.241379
  4.309573 5.303523 1.366036
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.CYM.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 9 0 0 0 0
 !entry.CYM.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -772,17 +772,17 @@
 !entry.CYS.unit.name single str
  "CYS"
 !entry.CYS.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
  3.877484 3.115795 2.131197
  4.309573 5.303523 1.366036
  3.725392 5.622018 2.517640
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.CYS.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 10 0 0 0 0
 !entry.CYS.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -865,16 +865,16 @@
 !entry.CYX.unit.name single str
  "CYX"
 !entry.CYX.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
  3.877484 3.115795 2.131197
  4.309573 5.303523 1.366036
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.CYX.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 9 8 0 0 0
 !entry.CYX.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -980,9 +980,9 @@
 !entry.GLH.unit.name single str
  "GLH"
 !entry.GLH.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -994,8 +994,8 @@
  4.594590 5.679012 3.454376
  2.855965 6.542070 2.333721
  2.710526 6.996624 3.166684
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.GLH.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 15 0 0 0 0
 !entry.GLH.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1111,9 +1111,9 @@
 !entry.GLN.unit.name single str
  "GLN"
 !entry.GLN.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -1126,8 +1126,8 @@
  4.458856 7.061523 2.488333
  4.248434 7.659045 3.274966
  5.084281 7.376210 1.760379
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.GLN.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 16 0 0 0 0
 !entry.GLN.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1236,9 +1236,9 @@
 !entry.GLU.unit.name single str
  "GLU"
 !entry.GLU.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -1249,8 +1249,8 @@
  3.873732 5.805369 2.428706
  4.594590 5.679012 3.454376
  2.855965 6.542070 2.333721
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.GLU.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 14 0 0 0 0
 !entry.GLU.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1325,13 +1325,13 @@
 !entry.GLY.unit.name single str
  "GLY"
 !entry.GLY.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.671668 3.400125 0.889824
- 5.483710 2.686702 -4.438953E-06
- 5.993369 1.568360 -8.469904E-06
+ 5.483710 2.686702 -4.438857E-06
+ 5.993369 1.568360 -8.469843E-06
 !entry.GLY.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 6 0 0 0 0
 !entry.GLY.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1439,9 +1439,9 @@
 !entry.HID.unit.name single str
  "HID"
 !entry.HID.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -1454,8 +1454,8 @@
  5.294011 6.891451 1.061663
  5.058974 5.678868 0.492453
  5.537741 5.417846 -0.451343
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.HID.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 16 0 0 0 0
 !entry.HID.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1573,9 +1573,9 @@
 !entry.HIE.unit.name single str
  "HIE"
 !entry.HIE.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -1588,8 +1588,8 @@
  5.896297 7.605085 0.676854
  5.058974 5.678868 0.492453
  5.537741 5.417846 -0.451343
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.HIE.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 16 0 0 0 0
 !entry.HIE.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1711,9 +1711,9 @@
 !entry.HIP.unit.name single str
  "HIP"
 !entry.HIP.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -1727,8 +1727,8 @@
  5.896297 7.605085 0.676854
  5.058974 5.678868 0.492453
  5.537741 5.417846 -0.451343
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.HIP.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 17 0 0 0 0
 !entry.HIP.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1854,9 +1854,9 @@
 !entry.ILE.unit.name single str
  "ILE"
 !entry.ILE.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.552136 3.620733 1.245168
  2.470128 3.752486 1.245640
@@ -1871,8 +1871,8 @@
  4.110777 5.208104 3.380628
  4.296689 6.738085 2.490833
  2.730286 5.893383 2.490813
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.ILE.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 18 0 0 0 0
 !entry.ILE.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -1999,9 +1999,9 @@
 !entry.LEU.unit.name single str
  "LEU"
 !entry.LEU.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -2016,8 +2016,8 @@
  4.181626 5.279602 3.325774
  4.379198 6.786825 2.400363
  2.801135 5.964881 2.435959
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.LEU.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 18 0 0 0 0
 !entry.LEU.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -2152,9 +2152,9 @@
 !entry.LYN.unit.name single str
  "LYN"
 !entry.LYN.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -2171,8 +2171,8 @@
  4.199422 7.952309 3.576860
  4.661186 8.850226 3.551979
  3.198675 8.088466 3.584971
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.LYN.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 20 0 0 0 0
 !entry.LYN.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -2313,9 +2313,9 @@
 !entry.LYS.unit.name single str
  "LYS"
 !entry.LYS.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -2333,8 +2333,8 @@
  4.478085 7.453366 4.409628
  4.661186 8.850226 3.551979
  3.198675 8.088466 3.584971
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.LYS.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 21 0 0 0 0
 !entry.LYS.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -2456,9 +2456,9 @@
 !entry.MET.unit.name single str
  "MET"
 !entry.MET.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -2471,8 +2471,8 @@
  4.433582 7.904044 1.396741
  4.585907 8.175299 3.148985
  5.814074 7.218763 2.286554
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.MET.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 16 0 0 0 0
 !entry.MET.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -2602,9 +2602,9 @@
 !entry.PHE.unit.name single str
  "PHE"
 !entry.PHE.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -2620,8 +2620,8 @@
  6.322309 7.082817 -0.386295
  5.068419 5.467143 0.314744
  5.293584 4.820007 -0.532968
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.PHE.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 19 0 0 0 0
 !entry.PHE.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -2730,7 +2730,7 @@
 !entry.PRO.unit.name single str
  "PRO"
 !entry.PRO.unit.positions table  dbl x  dbl y  dbl z
- 3.326834 1.557389 -1.603999E-06
+ 3.326834 1.557389 -1.603945E-06
  4.302147 0.476598 0.080119
  4.419998 0.019283 -0.902263
  3.955888 -0.274040 0.790574
@@ -2833,17 +2833,17 @@
 !entry.SER.unit.name single str
  "SER"
 !entry.SER.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
  3.877484 3.115795 2.131197
  4.230753 4.925145 1.196917
  3.983305 5.433814 1.972562
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.SER.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 10 0 0 0 0
 !entry.SER.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -2942,9 +2942,9 @@
 !entry.THR.unit.name single str
  "THR"
 !entry.THR.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  4.075059 4.623017 1.205786
@@ -2954,8 +2954,8 @@
  1.764699 4.397847 0.345796
  3.971501 2.947413 2.411212
  3.724052 3.456082 3.186857
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.THR.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 13 0 0 0 0
 !entry.THR.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -3099,9 +3099,9 @@
 !entry.TRP.unit.name single str
  "TRP"
 !entry.TRP.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -3121,8 +3121,8 @@
  5.604041 5.117355 -0.785636
  5.358720 4.126570 -1.168080
  5.083390 5.623004 0.411545
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.TRP.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 23 0 0 0 0
 !entry.TRP.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -3263,9 +3263,9 @@
 !entry.TYR.unit.name single str
  "TYR"
 !entry.TYR.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -3282,8 +3282,8 @@
  6.414694 6.813595 -0.736962
  5.114806 5.318263 0.128119
  5.276286 4.599920 -0.675627
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.TYR.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 20 0 0 0 0
 !entry.TYR.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx
@@ -3400,9 +3400,9 @@
 !entry.VAL.unit.name single str
  "VAL"
 !entry.VAL.unit.positions table  dbl x  dbl y  dbl z
- 3.325770 1.547909 -1.607257E-06
- 3.909407 0.723611 -2.739904E-06
- 3.970048 2.845795 -1.312144E-07
+ 3.325770 1.547909 -1.607204E-06
+ 3.909407 0.723611 -2.739882E-06
+ 3.970048 2.845795 -1.311163E-07
  3.671663 3.400129 -0.889820
  3.576965 3.653838 1.232143
  2.496995 3.801075 1.241379
@@ -3414,8 +3414,8 @@
  3.973781 5.548460 0.295972
  3.993559 5.587585 2.075079
  5.354271 4.863178 1.185788
- 5.485541 2.705207 -4.398851E-06
- 6.008824 1.593175 -8.449829E-06
+ 5.485541 2.705207 -4.398755E-06
+ 6.008824 1.593175 -8.449768E-06
 !entry.VAL.unit.residueconnect table  int c1x  int c2x  int c3x  int c4x  int c5x  int c6x
  1 15 0 0 0 0
 !entry.VAL.unit.residues table  str name  int seq  int childseq  int startatomx  str restype  int imagingx

@@ -40,10 +40,10 @@ validate_sequence_SOURCES = validate_sequence.cc
 validate_sequence_CPPFLAGS = -I$(top_builddir)/deps/gmml/include
 validate_sequence_LDADD = $(top_builddir)/deps/gmml/libgmml.a
 
-PdbInfoPB.pb.cc PdbInfoPB.pb.h: \
-                $(top_builddir)/src/proto/PdbInfoPB.proto
-	$(PROTO_CMD) $(top_builddir)/src/proto/PdbInfoPB.proto
+%.pb.cc %.pb.h: $(top_builddir)/src/proto/%.proto
+	$(PROTO_CMD) $<
 
 MAINTAINERCLEANFILES = \
+  $(BUILT_SOURCES) \
   Makefile \
   Makefile.in

@@ -8,19 +8,13 @@ BUILT_SOURCES = \
   BuildResultsPB.pb.cc \
   BuildResultsPB.pb.h
 
-# make a separate variable PROTOC
 PROTO_CMD = \
   $(top_builddir)/deps/protobuf/src/protoc \
   --cpp_out=./ \
   --proto_path=$(top_builddir)/src/proto
 
-BuildResultsPB.pb.cc BuildResultsPB.pb.h: \
-                $(top_builddir)/src/proto/BuildResultsPB.proto
-	$(PROTO_CMD) $(top_builddir)/src/proto/BuildResultsPB.proto
-
-BuildInfoPB.pb.cc BuildInfoPB.pb.h: \
-                $(top_builddir)/src/proto/BuildInfoPB.proto
-	$(PROTO_CMD) $(top_builddir)/src/proto/BuildInfoPB.proto
+%.pb.cc %.pb.h: $(top_builddir)/src/proto/%.proto
+	$(PROTO_CMD) $<
 
 bin_PROGRAMS = build_torsions_mpi
 
@@ -40,9 +34,6 @@ build_torsions_mpi_LDADD = \
   $(top_builddir)/deps/protobuf/src/libprotobuf.la
 
 MAINTAINERCLEANFILES = \
-  BuildInfoPB.pb.cc \
-  BuildInfoPB.pb.h \
-  BuildResultsPB.pb.cc \
-  BuildResultsPB.pb.h \
+  $(BUILT_SOURCES) \
   Makefile \
   Makefile.in

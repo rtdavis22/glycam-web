@@ -4,7 +4,7 @@
 AC_PREREQ([2.60])
 AC_INIT([glycam-web], [0.0.1], rtdavis22@gmail.com)
 AM_INIT_AUTOMAKE([foreign silent-rules])
-AC_CONFIG_SRCDIR([src/cpp/validate_structure.cc])
+AC_CONFIG_SRCDIR([src/cpp/validate_sequence.cc])
 AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.

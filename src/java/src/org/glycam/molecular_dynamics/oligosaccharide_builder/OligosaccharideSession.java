@@ -63,7 +63,7 @@ public class OligosaccharideSession {
         linkages = new ArrayList<Linkage>();
         boolean valid = true;
         try {
-            Process process = CPP.exec("getlinkages " + structure);
+            Process process = CPP.exec("get_linkages " + structure);
             BufferedReader is = new BufferedReader(
                  new InputStreamReader(process.getInputStream())
             );

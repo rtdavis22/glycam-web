@@ -19,7 +19,7 @@ public class Sequence {
     public String validate() {
         String defaultError = "Error in sequence";
         try {
-            Process process = CPP.exec("validate_structure " + sequence);
+            Process process = CPP.exec("validate_sequence " + sequence);
             if (process.waitFor() != 0) {
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(process.getInputStream()));

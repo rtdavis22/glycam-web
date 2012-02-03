@@ -1,6 +1,7 @@
 SUBDIRS = . ./mpi
 
 bin_PROGRAMS = \
+  build_glycoprotein \
   draw_glycan \
   get_linkages \
   get_pdb_info \
@@ -16,6 +17,20 @@ PROTO_CMD = \
   --cpp_out=./ \
   --proto_path=$(top_builddir)/src/proto
 
+build_glycoprotein_SOURCES = \
+  build_glycoprotein.cc \
+  mpi/BuildInfoPB.pb.cc \
+  mpi/BuildInfoPB.pb.h \
+  PdbInfoPB.pb.cc \
+  PdbInfoPB.pb.h
+build_glycoprotein_CPPFLAGS = \
+  -I$(top_builddir)/deps/gmml/include \
+  -I$(top_builddir)/deps/protobuf/src \
+  -Impi
+build_glycoprotein_LDADD = \
+  $(top_builddir)/deps/gmml/libgmml.a \
+  $(top_builddir)/deps/protobuf/src/libprotobuf.la
+
 draw_glycan_SOURCES = draw_glycan.cc
 draw_glycan_CPPFLAGS = -I$(top_builddir)/deps/gmml/include
 draw_glycan_LDADD = $(top_builddir)/deps/gmml/libgmml.a
@@ -24,10 +39,16 @@ get_linkages_SOURCES = get_linkages.cc
 get_linkages_CPPFLAGS = -I$(top_builddir)/deps/gmml/include
 get_linkages_LDADD = $(top_builddir)/deps/gmml/libgmml.a
 
-get_pdb_info_SOURCES = PdbInfoPB.pb.cc PdbInfoPB.pb.h get_pdb_info.cc
+get_pdb_info_SOURCES = \
+  mpi/BuildInfoPB.pb.cc \
+  mpi/BuildInfoPB.pb.h \
+  PdbInfoPB.pb.cc \
+  PdbInfoPB.pb.h \
+  get_pdb_info.cc
 get_pdb_info_CPPFLAGS = \
   -I$(top_builddir)/deps/gmml/include \
-  -I$(top_builddir)/deps/protobuf/src
+  -I$(top_builddir)/deps/protobuf/src \
+  -Impi
 get_pdb_info_LDADD = \
   $(top_builddir)/deps/gmml/libgmml.a \
   $(top_builddir)/deps/protobuf/src/libprotobuf.la

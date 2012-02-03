@@ -23,6 +23,7 @@ JAVA_FILES = \
   src/org/glycam/molecular_dynamics/Linkage.java \
   src/org/glycam/molecular_dynamics/LinkageValues.java \
   src/org/glycam/molecular_dynamics/SolvationSettings.java \
+  src/org/glycam/molecular_dynamics/glycoprotein_builder/BuildRequest.java \
   src/org/glycam/molecular_dynamics/glycoprotein_builder/GlycoproteinSession.java \
   src/org/glycam/molecular_dynamics/oligosaccharide_builder/BuildRequest.java \
   src/org/glycam/molecular_dynamics/oligosaccharide_builder/OligosaccharideSession.java \

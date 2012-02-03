@@ -142,7 +142,8 @@ public class OligosaccharideSession {
     }
 */
 
-    private BuildInfo buildProtocolBuffer() {
+    // 
+    public BuildInfo buildProtocolBuffer() {
         BuildInfo.Builder info = BuildInfo.newBuilder();
         info.setGlycan(structure);
 

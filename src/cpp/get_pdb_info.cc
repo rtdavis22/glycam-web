@@ -21,6 +21,7 @@ using std::vector;
 using namespace gmml;
 
 using molecular_dynamics::glycoprotein_builder::CYSPair;
+using molecular_dynamics::glycoprotein_builder::GlycosylationSpot;
 using molecular_dynamics::glycoprotein_builder::PdbInfo;
 using molecular_dynamics::glycoprotein_builder::PdbResidueInfo;
 
@@ -30,8 +31,6 @@ namespace {
 // for a disulfide bond to be deemed "possible".
 const double kSulfurCutoff = 2.5;
 
-const char *kDefaultHISMapping = "HID";
-
 }
 
 void set_residue_info(PdbResidueInfo *info, int index, Triplet<int> *pdb_id) {
@@ -39,7 +38,6 @@ void set_residue_info(PdbResidueInfo *info, int index, Triplet<int> *pdb_id) {
     info->set_chain_id(string(1, pdb_id->first));
     info->set_res_num(pdb_id->second);
     info->set_i_code(string(1, pdb_id->third));
-    info->set_mapped_name("");
 }
 
 void set_residue_info(PdbResidueInfo *info, PdbFileStructure::pdb_iterator it) {
@@ -119,10 +117,15 @@ int main(int argc, char *argv[]) {
     for (PdbFileStructure::pdb_iterator it = structure->pdb_begin();
             it != structure->pdb_end(); ++it) {
         Residue *residue = structure->residues(it->second);
-        if (residue->name() == "HIS") {
+        string name = residue->name();
+        if (name == "HIS") {
             PdbResidueInfo *residue_info = info.add_his_residue();
             set_residue_info(residue_info, it);
-            residue_info->set_mapped_name(kDefaultHISMapping);
+        } else if (name == "ASN" || name == "PRO" || name == "SER" ||
+                name == "THR") {
+            GlycosylationSpot *spot = info.add_glycosylation_spot();
+            spot->set_name(name);
+            set_residue_info(spot->mutable_info(), it);
         }
     }
 

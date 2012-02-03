@@ -5,6 +5,7 @@ SUBDIRS = deps/gmml deps/protobuf src/cpp/ .
 all-local:
 	$(MAKE) -C src/java
 	mkdir -p bin
+	cd bin && ln -fs ../src/cpp/build_glycoprotein build_glycoprotein
 	cd bin && ln -fs ../src/cpp/draw_glycan draw_glycan
 	cd bin && ln -fs ../src/cpp/get_linkages get_linkages
 	cd bin && ln -fs ../src/cpp/get_pdb_info get_pdb_info

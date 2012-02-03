@@ -19,8 +19,8 @@
 
 #include "gmml/gmml.h"
 
-#include "BuildInfoPB.pb.h"
-#include "BuildResultsPB.pb.h"
+#include "src/cpp/BuildInfoPB.pb.h"
+#include "src/cpp/BuildResultsPB.pb.h"
 
 #include <algorithm>
 #include <iostream>
@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
         }
 
         double vals[1];
-        vals[0] = (results != NULL)?results->energy:-1;
+        vals[0] = (results != NULL)?results->energy():-1;
         MPI_Send(vals, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
 
         delete *it;

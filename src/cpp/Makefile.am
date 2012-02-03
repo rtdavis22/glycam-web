@@ -9,6 +9,10 @@ bin_PROGRAMS = \
   validate_sequence
 
 BUILT_SOURCES = \
+  BuildInfoPB.pb.cc \
+  BuildInfoPB.pb.h \
+  BuildResultsPB.pb.cc \
+  BuildResultsPB.pb.h \
   PdbInfoPB.pb.cc \
   PdbInfoPB.pb.h
 
@@ -19,14 +23,13 @@ PROTO_CMD = \
 
 build_glycoprotein_SOURCES = \
   build_glycoprotein.cc \
-  mpi/BuildInfoPB.pb.cc \
-  mpi/BuildInfoPB.pb.h \
+  BuildInfoPB.pb.cc \
+  BuildInfoPB.pb.h \
   PdbInfoPB.pb.cc \
   PdbInfoPB.pb.h
 build_glycoprotein_CPPFLAGS = \
   -I$(top_builddir)/deps/gmml/include \
-  -I$(top_builddir)/deps/protobuf/src \
-  -Impi
+  -I$(top_builddir)/deps/protobuf/src
 build_glycoprotein_LDADD = \
   $(top_builddir)/deps/gmml/libgmml.a \
   $(top_builddir)/deps/protobuf/src/libprotobuf.la
@@ -40,15 +43,14 @@ get_linkages_CPPFLAGS = -I$(top_builddir)/deps/gmml/include
 get_linkages_LDADD = $(top_builddir)/deps/gmml/libgmml.a
 
 get_pdb_info_SOURCES = \
-  mpi/BuildInfoPB.pb.cc \
-  mpi/BuildInfoPB.pb.h \
+  BuildInfoPB.pb.cc \
+  BuildInfoPB.pb.h \
   PdbInfoPB.pb.cc \
   PdbInfoPB.pb.h \
   get_pdb_info.cc
 get_pdb_info_CPPFLAGS = \
   -I$(top_builddir)/deps/gmml/include \
-  -I$(top_builddir)/deps/protobuf/src \
-  -Impi
+  -I$(top_builddir)/deps/protobuf/src
 get_pdb_info_LDADD = \
   $(top_builddir)/deps/gmml/libgmml.a \
   $(top_builddir)/deps/protobuf/src/libprotobuf.la

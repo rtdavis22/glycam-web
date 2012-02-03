@@ -9,7 +9,7 @@
 
 #include "gmml/gmml.h"
 
-#include "PdbInfoPB.pb.h"
+#include "src/cpp/PdbInfoPB.pb.h"
 
 using namespace gmml;
 

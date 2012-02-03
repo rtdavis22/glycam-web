@@ -1,9 +1,9 @@
 // Author: Robert Davis
 //
-// This program checks to make sure a particular sequence in GLYCAM condensed nomenclature has the
-// correct sequence and can be built. The sequence is taken as a command-line argument. If there is
-// an error, the program writes an error message to standard output and returns with a non-zero exit
-// status.
+// This program checks to make sure a particular sequence in GLYCAM condensed
+// nomenclature has the correct sequence and can be built. The sequence is
+// taken as a command-line argument. If there is an error, the program writes
+// an error message to standard output and returns with a non-zero exit status.
 
 #include "config.h"
 

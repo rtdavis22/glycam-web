@@ -2,28 +2,14 @@ SUBDIRS = .
 
 CXX = mpicxx
 
-BUILT_SOURCES = \
-  BuildInfoPB.pb.cc \
-  BuildInfoPB.pb.h \
-  BuildResultsPB.pb.cc \
-  BuildResultsPB.pb.h
-
-PROTO_CMD = \
-  $(top_builddir)/deps/protobuf/src/protoc \
-  --cpp_out=./ \
-  --proto_path=$(top_builddir)/src/proto
-
-%.pb.cc %.pb.h: $(top_builddir)/src/proto/%.proto
-	$(PROTO_CMD) $<
-
 bin_PROGRAMS = build_torsions_mpi
 
 build_torsions_mpi_SOURCES = \
   build_torsions_mpi.cc \
-  BuildInfoPB.pb.cc \
-  BuildInfoPB.pb.h \
-  BuildResultsPB.pb.cc \
-  BuildResultsPB.pb.h
+  ../BuildInfoPB.pb.cc \
+  ../BuildInfoPB.pb.h \
+  ../BuildResultsPB.pb.cc \
+  ../BuildResultsPB.pb.h
 
 build_torsions_mpi_CPPFLAGS = \
   -I$(top_builddir)/deps/gmml/include \

@@ -2,6 +2,7 @@ package org.glycam.molecular_dynamics.glycoprotein_builder;
 
 import org.glycam.CPP;
 import org.glycam.Logging;
+import org.glycam.molecular_dynamics.glycan_builder.GlycanSession;
 import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.CYSPair;
 import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.GlycosylationInfo;
 import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.GlycosylationSpot;
@@ -9,7 +10,6 @@ import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbInfo;
 import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbMapping;
 import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbModificationInfo;
 import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbResidueInfo;
-import org.glycam.molecular_dynamics.oligosaccharide_builder.OligosaccharideSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,16 +21,16 @@ import java.util.List;
 public class GlycoproteinSession {
     public static class AttachedGlycan {
         private PdbResidueInfo residueInfo;
-        private OligosaccharideSession session;
+        private GlycanSession session;
 
-        public AttachedGlycan(PdbResidueInfo residueInfo, OligosaccharideSession session) {
+        public AttachedGlycan(PdbResidueInfo residueInfo, GlycanSession session) {
             this.residueInfo = residueInfo;
             this.session = session;
         }
 
         public PdbResidueInfo getResidueInfo() { return residueInfo; }
 
-        public OligosaccharideSession getSession() { return session; }
+        public GlycanSession getSession() { return session; }
     }
 
     private File pdbFile;
@@ -42,7 +42,7 @@ public class GlycoproteinSession {
     private List<GlycosylationSpot> nLinkingSpots;
     private List<GlycosylationSpot> oLinkingSpots;
 
-    private OligosaccharideSession currentGlycanSession;
+    private GlycanSession currentGlycanSession;
 
     private List<AttachedGlycan> attachedGlycans;
 
@@ -67,13 +67,13 @@ public class GlycoproteinSession {
     public List<GlycosylationSpot> getNLinkingSpots() { return nLinkingSpots; }
     public List<GlycosylationSpot> getOLinkingSpots() { return oLinkingSpots; }
 
-    public OligosaccharideSession getCurrentGlycanSession() { return currentGlycanSession; }
+    public GlycanSession getCurrentGlycanSession() { return currentGlycanSession; }
 
     public List<AttachedGlycan> getAttachedGlycans() { return attachedGlycans; }
 
     public BuildRequest getBuildRequest() { return buildRequest; }
 
-    public void setCurrentGlycanSession(OligosaccharideSession glycanSession) {
+    public void setCurrentGlycanSession(GlycanSession glycanSession) {
         currentGlycanSession = glycanSession;
     }
 

@@ -40,8 +40,8 @@ using std::vector;
 using namespace gmml;
 using namespace gmml::carbohydrate;
 
-using molecular_dynamics::oligosaccharide_builder::BuildInfo;
-using molecular_dynamics::oligosaccharide_builder::BuildResults;
+using molecular_dynamics::glycan_builder::BuildInfo;
+using molecular_dynamics::glycan_builder::BuildResults;
 
 std::vector<std::string>& split(const std::string& str, char delimiter,
                                 std::vector<std::string>& elements) {

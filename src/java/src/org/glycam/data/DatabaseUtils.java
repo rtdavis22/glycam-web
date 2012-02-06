@@ -1,5 +1,3 @@
-// Author: Robert Davis
-
 package org.glycam.data;
 
 import org.glycam.Logging;
@@ -10,14 +8,23 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-// This class includes global configuration information.
+/**
+ * Utilities for interacting with data.
+ *
+ * @author Robert Davis
+ */
 public class DatabaseUtils {
     private DatabaseUtils() {
         throw new AssertionError();
     }
 
-    // Returns a connect to the data source represented by the given resource name. If there is an
-    // error, this returns null instead of throwing.
+    /**
+     * Returns a connection to the data source represented by the given resource name.
+     *
+     * @param resourceName the name of the resource.
+     *
+     * @return a {@link Connection} to the data source or {@code null} if there was an error.
+     */
     public static Connection getDataConnection(String resourceName) {
         try {
             Context initialContext = new InitialContext();

@@ -1,23 +1,168 @@
-// Author: Robert Davis
-
-package org.glycam.molecular_dynamics.oligosaccharide_builder;
+package org.glycam.molecular_dynamics.glycan_builder;
 
 import org.glycam.CPP;
+import org.glycam.LinkageValues;
 import org.glycam.Logging;
-import org.glycam.molecular_dynamics.LinkageValues;
 import org.glycam.molecular_dynamics.SolvationSettings;
-import org.glycam.molecular_dynamics.oligosaccharide_builder.BuildInfoPB.BuildInfo;
-import org.glycam.molecular_dynamics.oligosaccharide_builder.BuildResultsPB.BuildResults;
+import org.glycam.molecular_dynamics.glycan_builder.BuildInfoPB.BuildInfo;
+import org.glycam.molecular_dynamics.glycan_builder.BuildResultsPB.BuildResults;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.SortedMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * A request to build the topology, restart, and PDB files for a glycan.
+ *
+ * @author Robert Davis
+ */
 public class BuildRequest implements Runnable {
-    public class StructureComparator implements java.util.Comparator<ResultStructure> {
+    /**
+     * The number of processors to use to fulfill this request.
+     */
+    private static final int NUM_PROCESSORS = 16;
+
+    /**
+     * Represents the status of a build request.
+     */
+    public enum Status {
+        /** The build is in progess. */
+        WORKING,
+
+        /** The build has successfully finished. */
+        DONE,
+
+        /** The build terminated with an error. */
+        ERROR
+    }
+
+    // A unique identifier associated with this build. GET rid of this.
+    private String uuid;
+
+    /**
+     * The directory where generated files will be written.
+     */
+    private File outputDirectory;
+
+    /**
+     * The status of the build request.
+     */
+    private Status status;
+
+    /**
+     * A protocol buffer with the information the C++ process needs to fulfill the build request.
+     */
+    private BuildInfo buildInfo;
+
+    /**
+     * The conformations that this build request generated.
+     */
+    private List<ResultStructure> resultStructures;
+
+    /**
+     * Creates a start a build request.
+     *
+     * @param buildInfo a protocol buffer representing the glycan to be built.
+     * @param outputDirectory the directory where files will be written.
+     */
+    BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
+        this.buildInfo = buildInfo;
+        this.uuid = uuid;
+        this.outputDirectory = outputDirectory;
+        this.resultStructures = null;
+        outputDirectory.mkdirs();
+        new Thread(this).start();
+    }
+
+    /**
+     * Returns the status of the build.
+     */
+    public Status getStatus() { return status; }
+
+    /**
+     * Returns the unique ID associated with this build.
+     * Get rid of this!!.
+     */
+    public String getUUID() { return uuid; }
+
+    /**
+     * The structures that this request created.
+     *
+     * This is only valid if {@link getStatus} is Status.DONE.
+     */
+    public List<ResultStructure> getResultStructures() {
+        return resultStructures;
+    }
+
+    /**
+     * Returns the number of structures this request has built so far.
+     *
+     * @return the number of structures built so far.
+     */
+    public int getStructuresBuiltSoFar() {
+        String[] files = outputDirectory.list();
+        int count = 0;
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].endsWith(".pdb"))
+               count++;
+        }
+        return count;
+    }
+
+    /**
+     * Builds the topology, restart, and PDB files.
+     */
+    public void run() {
+        status = Status.WORKING;
+ 
+        BuildResults results = null;
+
+        try {
+            File tempFile = File.createTempFile("build_request", null);
+            FileOutputStream output = new FileOutputStream(tempFile);
+            buildInfo.writeTo(output);
+            output.close();
+            String command = "build_torsions_mpi " + tempFile.getPath();
+            Process process = CPP.execMPI(command, NUM_PROCESSORS, outputDirectory);
+            results = BuildResults.parseFrom(process.getInputStream());
+            tempFile.delete();
+            Logging.logger.info("process exited with value " + process.waitFor());
+        } catch (IOException e) {
+            Logging.logger.severe(e.getMessage());
+            status = Status.ERROR;
+            return;
+        } catch (InterruptedException e) {
+            Logging.logger.severe(e.getMessage());
+            status = Status.ERROR;
+            return;
+        }
+
+        resultStructures = createResultStructures(results);
+
+        java.util.Collections.sort(resultStructures, new StructureComparator());
+
+        if (!resultStructures.isEmpty()) {
+            double minEnergy = resultStructures.get(0).getEnergy();
+            // Boltzmann's constant times temperature
+            double kT = 0.0019872041*300;
+            for (ResultStructure structure : resultStructures) {
+                structure.setBoltzmann(Math.exp((minEnergy - structure.getEnergy())/kT));
+            }
+        }
+
+        renameFiles();
+
+        status = Status.DONE;
+    }
+
+    /**
+     * A comparator for {@link ResultStructure}s based on energy.
+     */
+    private class StructureComparator implements java.util.Comparator<ResultStructure> {
         @Override
         public int compare(ResultStructure lhs, ResultStructure rhs) {
             double difference = rhs.getEnergy() - lhs.getEnergy();
@@ -32,113 +177,10 @@ public class BuildRequest implements Runnable {
     }
 
     /**
-     * Represents the status of a build request.
+     * Rename the files according to the order of the result structures.
      */
-    public enum Status {
-        /** run has not been called yet. Remove this and run when constructed, I think. */
-        NOT_STARTED,
-
-        /** The build is in progess. */
-        WORKING,
-
-        /** The build has successfully finished. */
-        DONE,
-
-        /** The build terminated with an error. */
-        ERROR
-    }
-
-    // A unique identifier associated with this build.
-    private String uuid;
-
-    // The directory where the builds output is going to.
-    private File outputDirectory;
-
-    // The status of the request.
-    private Status status;
-
-    // This is a protocol buffer that's sent to a c++ process to tell it what to build.
-    private BuildInfo buildInfo;
-
-    // Each structure in the list has a map from the linkage index to the angle values of
-    // that linkage. The protocol buffer from the c++ process could be used directly but this
-    // is a preferable data structure.
-    private ArrayList<ResultStructure> resultStructures;
-
-    // run() should be called here, I think.
-    BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
-        this.buildInfo = buildInfo;
-        resultStructures = null;
-        status = Status.NOT_STARTED;
-        this.uuid = uuid;
-        this.outputDirectory = outputDirectory;
-        outputDirectory.mkdirs();
-    }
-
-    public int getStructuresBuiltSoFar() {
-        String[] files = outputDirectory.list();
-        int count = 0;
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].endsWith(".pdb"))
-               count++;
-        }
-        return count;
-    }
-
-    public ArrayList<ResultStructure> getResultStructures() {
-        return resultStructures;
-    }
-
-    public String getUUID() { return uuid; }
-    public Status getStatus() { return status; }
-
-    public void run() {
-        status = Status.WORKING;
- 
-        BuildResults results = null;
-
-        try {
-            File tempFile = File.createTempFile("build_request", null);
-            FileOutputStream output = new FileOutputStream(tempFile);
-            buildInfo.writeTo(output);
-            output.close();
-            String command = "build_torsions_mpi " + tempFile.getPath();
-            Process process = CPP.execMPI(command, 16, outputDirectory);
-            results = BuildResults.parseFrom(process.getInputStream());
-            tempFile.delete();
-            Logging.logger.info("process exited with value " + process.waitFor());
-        } catch (IOException e) {
-            Logging.logger.severe(e.getMessage());
-            status = Status.ERROR;
-            return;
-        } catch (InterruptedException e) {
-            Logging.logger.severe(e.getMessage());
-            status = Status.ERROR;
-            return;
-        }
-
-        resultStructures = parseResults(results);
-
-        // Sort the structures by energy, from lowest to highest.
-        java.util.Collections.sort(resultStructures, new StructureComparator());
-
-        if (resultStructures.size() > 0) {
-            double minEnergy = resultStructures.get(0).getEnergy();
-            // Boltzmann's constant times temperature
-            double kT = 0.0019872041*300;
-            for (ResultStructure structure : resultStructures) {
-                structure.setBoltzmann(Math.exp((minEnergy - structure.getEnergy())/kT));
-            }
-        }
-
-        renameFiles();
-
-        status = Status.DONE;
-    }
-
-    // Rename the files according to the order of the result structures.
     private void renameFiles() {
-        java.util.TreeMap<Integer, Integer> map = new java.util.TreeMap<Integer, Integer>();
+        Map<Integer, Integer> map = new java.util.TreeMap<Integer, Integer>();
         for (int i = 0; i < resultStructures.size(); i++) {
             map.put(resultStructures.get(i).getIndex(), i);
         }
@@ -163,12 +205,19 @@ public class BuildRequest implements Runnable {
         }
     }
 
-    private ArrayList<ResultStructure> parseResults(BuildResults results) {
-        ArrayList<ResultStructure> resultStructures = new ArrayList<ResultStructure>();
-
+    /**
+     * Creates a list of structures from a protocol buffer which represents the results of the
+     * build.
+     *
+     * @param results a protocol buffer representing the results of the build.
+     *
+     * @return a list of structures that were build and information associated with them.
+     */
+    private List<ResultStructure> createResultStructures(BuildResults results) {
+        List<ResultStructure> resultStructures = new ArrayList<ResultStructure>();
         int structureIndex = 0;
         for (BuildResults.Structure structure : results.getStructureList()) {
-            SortedMap<Integer, LinkageValues> structureAngles =
+            Map<Integer, LinkageValues> structureAngles =
                     new TreeMap<Integer, LinkageValues>();
 
             for (BuildResults.FlexibleLinkage flexLinkage : structure.getFlexibleLinkageList()) {
@@ -191,7 +240,8 @@ public class BuildRequest implements Runnable {
                     angleValues.setOmega(value);
             }
             double energy = structure.getEnergy();
-            // The last parameter is the Boltzmann probability. We'll put a dummy value in here.
+            // The last parameter is the Boltzmann probability. We'll put a dummy value in here
+            // for now.
             resultStructures.add(new ResultStructure(structureAngles, structureIndex++, energy, 0));
         }
         return resultStructures;

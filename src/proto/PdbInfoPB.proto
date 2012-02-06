@@ -52,5 +52,5 @@ message GlycosylationSpot {
 
 message GlycosylationInfo {
     required PdbResidueInfo spot = 1;
-    required molecular_dynamics.oligosaccharide_builder.BuildInfo glycan = 2;
+    required molecular_dynamics.glycan_builder.BuildInfo glycan = 2;
 }

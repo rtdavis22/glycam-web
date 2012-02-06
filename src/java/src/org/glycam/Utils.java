@@ -7,10 +7,17 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.File;
 
+/**
+ * Utility functions.
+ *
+ * @author Robert Davis
+ */
 public class Utils {
-    // This checks if a particular sequence in GLYCAM condensed nomenclature has correct syntax
-    // and can be built. If it does not, an error message is returned. Otherwise, an empty
-    // string is returned.
+    /**
+     * Checks to see if a PDB file is valid.
+     *
+     * @return {@code ""} if the PDB is valid. Otherwise, an error message.
+     */
     public static String validatePdb(File pdbFile) {
         String defaultError = "Invalid pdb";
         try {

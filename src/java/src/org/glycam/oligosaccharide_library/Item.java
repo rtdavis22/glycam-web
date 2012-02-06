@@ -1,22 +1,37 @@
-// Author: Robert Davis
-
 package org.glycam.oligosaccharide_library;
 
-// This class represents a structure in the oligosaccharide library. It is suitable for use as
-// a JavaBean.
+/**
+ * An oligosaccharide in the oligosaccharide library.
+ *
+ * This class is suitable for use as a JavaBean.
+ *
+ * @author Robert Davis
+ */
 public class Item {
-    // The unique id assigned to this sequence.
+    /**
+     * A unique ID assigned to this sequence.
+     */
     private int id;
 
-    // The sequence in GLYCAM condensed nomenclature.
+    /**
+     * The sequence in GLYCAM condensed nomenclature.
+     * TODO: Use GlycanSequence instead.
+     */
     private String sequence;
 
-    // A name for the structure.
+    /**
+     * A name for the sequence.
+     */
     private String name;
 
-    // Additional information about the structure.
+    /**
+     * Additional information associated with the sequence.
+     */
     private String description;
 
+    /**
+     * Creates an oligosaccharide library item.
+     */
     public Item(int id, String sequence, String name, String description) {
         this.id = id;
         this.sequence = sequence;

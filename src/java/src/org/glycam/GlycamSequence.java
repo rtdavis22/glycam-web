@@ -115,31 +115,4 @@ public class GlycamSequence {
         }
         return linkages;
     }
-
-    /**
-     * Checks if the sequence is valid.
-     *
-     * @return {@code ""} if the sequence is valid in condensed GLYCAM nomenclature and can be
-     *         build. Otherwise, an error message is returned.
-     */
-    public String validate() {
-        String defaultError = "Error in sequence";
-        try {
-            Process process = CPP.exec("validate_sequence " + sequence);
-            if (process.waitFor() != 0) {
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                String line;
-                if ((line = reader.readLine()) != null)
-                    return line;
-                else
-                    return defaultError;
-            }
-        } catch (IOException e) {
-            return defaultError;
-        } catch (InterruptedException e) {
-            return defaultError;
-        }
-        return "";
-    }
 }

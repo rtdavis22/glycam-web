@@ -1,7 +1,5 @@
 SUBDIRS = deps/gmml deps/protobuf src/cpp/ .
 
-
-
 all-local:
 	$(MAKE) -C src/java
 	mkdir -p bin
@@ -14,6 +12,10 @@ all-local:
 	cd bin && ln -fs ../src/cpp/validate_sequence validate_sequence
 	mkdir -p lib
 	cp src/java/target/glycam-web.jar lib
+
+docs:
+	javadoc -d docs org org.glycam org.glycam.configuration org.glycam.data org.glycam.molecular_dynamics org.glycam.oligosaccharide_library org.glycam.molecular_dynamics.glycan_builder org.glycam.molecular_dynamics.glycoprotein_builder
+
 
 clean-local:
 	$(MAKE) -C src/java clean

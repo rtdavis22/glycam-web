@@ -13,28 +13,70 @@ import java.util.ArrayList;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+/**
+ * The relevant information needed to build oligosaccharides.
+ *
+ * @author Robert Davis
+ */
 public class OligosaccharideSession {
-    // The full name of the glycan.
+    /**
+     * The sequence in GLYCAM condensed nomenclature.
+     */
     private String structure;
 
-    // 
+    /**
+     * Linkage information, one per residue.
+     */
     private ArrayList<Linkage> linkages;
 
-    // This is null if the structure is not solvated.
+    /**
+     * Information for how to solvate the structure.
+     */
     private SolvationSettings solvationSettings;
 
+    /**
+     * The build request this session is waiting on.
+     */
     private BuildRequest buildRequest;
 
-    public OligosaccharideSession(String structure) throws java.io.IOException {
-        this.structure = structure;
-        initLinkages(structure);
+    /**
+     * Initialize the session with a sequence in GLYCAM condensed nomenclature.
+     *
+     * @param sequence The sequence in GLYCAM condensed nomenclature.
+     */
+    public OligosaccharideSession(String sequence) throws java.io.IOException {
+        this.structure = sequence;
+        initLinkages(sequence);
         solvationSettings = null;
         buildRequest = null;
     }
 
+    /**
+     * Returns the build request that's associated with this session.
+     *
+     * @return the build request associated with session or {@code null} if there isn't one.
+     */
     public BuildRequest getBuildRequest() { return buildRequest; }
+
+    /**
+     * Resets the build request associated with this session, if there is one.
+     */
     public void resetBuildRequest() { buildRequest = null; }
 
+    /**
+     * Builds the oligosaccharide(s).
+     *
+     * <p>This function returns before the build is finished. The {@link BuildRequest} object
+     * that's returned contains information about the status of the build.</p>
+     *
+     * <p>Future calls to {@link getBuildRequest} will return the {@link BuildRequest} that's
+     * created until {@link resetBuildRequest} is called.</p>
+     *
+     * @param outputDirectory the directory where the output files will be placed.
+     * @param uid I should get rid of this parameter, I think.
+     *
+     * @return the {@link BuildRequest}.
+     */
     public BuildRequest build(File outputDirectory, String uid) {
         BuildInfo build_info = buildProtocolBuffer();
 
@@ -44,16 +86,26 @@ public class OligosaccharideSession {
         return buildRequest;
     }
 
-    // Accessors
+    /**
+     * Returns the sequence in GLYCAM condensed nomenclature.
+     */
     public String getStructure() { return structure; }
 
+    /**
+     * Returns the linkages of the oligosaccharide.
+     */
     public ArrayList<Linkage> getLinkages() { return linkages; }
 
+    /**
+     * Returns the solvation information associated with this session.
+     */
     public SolvationSettings getSolvationSettings() {
         return solvationSettings;
     }
 
-    // Mutators
+    /**
+     * Sets the solvation information associated with this session.
+     */
     public void setSolvationSettings(SolvationSettings options) {
         solvationSettings = options;
     }
@@ -64,9 +116,7 @@ public class OligosaccharideSession {
         boolean valid = true;
         try {
             Process process = CPP.exec("get_linkages " + structure);
-            BufferedReader is = new BufferedReader(
-                 new InputStreamReader(process.getInputStream())
-            );
+            BufferedReader is = new BufferedReader(new InputStreamReader(process.getInputStream()));
             process.waitFor();
             String line;
             while ((line = is.readLine()) != null) {
@@ -100,6 +150,12 @@ public class OligosaccharideSession {
         }
     }
 
+    /**
+     * Returns the total number of structures this session would generate if {@link build} were
+     * called on it.
+     * 
+     * @return the number of structures this session generates.
+     */
     public int getTotalStructureCount() {
         int totalStructures = 1;
         for (int i = 2; i < linkages.size(); i++) {
@@ -113,6 +169,11 @@ public class OligosaccharideSession {
         return totalStructures;
     }
 
+    /**
+     * Returns true if the structure has any flexible phi angles.
+     * Note: I think I can set a variable in the constructor rather than doing the work each time
+     * this is called. Same for below.
+     */
     public boolean hasFlexiblePhis() {
         for (int i = 2; i < linkages.size(); i++) {
             if (linkages.get(i).isFlexiblePhi())
@@ -121,6 +182,9 @@ public class OligosaccharideSession {
         return false;
     }
 
+    /**
+     * Returns true if the structure has any flexible omega angles.
+     */
     public boolean hasFlexibleOmegas() {
         for (int i = 2; i < linkages.size(); i++) {
             if (linkages.get(i).isFlexibleOmega())
@@ -129,20 +193,9 @@ public class OligosaccharideSession {
         return false;
     }
 
-    // Remove this.
-   /*
-    public String getLinkageString() {
-        String ret = "";
-        if (linkages.size() > 0)
-            ret += linkages.get(0).getString();
-        for (int i = 1; i < linkages.size(); i++) {
-            ret += ";" + linkages.get(i).getString();
-        }
-        return ret;
-    }
-*/
-
-    // 
+    /**
+     * Build the protocol buffer representing the information in this session.
+     */
     public BuildInfo buildProtocolBuffer() {
         BuildInfo.Builder info = BuildInfo.newBuilder();
         info.setGlycan(structure);

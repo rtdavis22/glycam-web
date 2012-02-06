@@ -52,11 +52,10 @@ public class BuildRequest implements Runnable {
     // Each structure in the list has a map from the linkage index to the angle values of
     // that linkage. The protocol buffer from the c++ process could be used directly but this
     // is a preferable data structure.
-    // TODO: make a new class "ResultStructure", which contains a SortedMap<>.
     private ArrayList<ResultStructure> resultStructures;
 
     // Pass in the target File in the constructor.
-    public BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
+    BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
         this.buildInfo = buildInfo;
         resultStructures = null;
         status = Status.NOT_STARTED;
@@ -97,11 +96,11 @@ public class BuildRequest implements Runnable {
             results = BuildResults.parseFrom(process.getInputStream());
             tempFile.delete();
             Logging.logger.info("process exited with value " + process.waitFor());
-        } catch(IOException e) {
+        } catch (IOException e) {
             Logging.logger.severe(e.getMessage());
             status = Status.ERROR;
             return;
-        } catch(InterruptedException e) {
+        } catch (InterruptedException e) {
             Logging.logger.severe(e.getMessage());
             status = Status.ERROR;
             return;

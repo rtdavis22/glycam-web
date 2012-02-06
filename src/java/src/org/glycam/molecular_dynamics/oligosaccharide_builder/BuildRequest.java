@@ -31,11 +31,22 @@ public class BuildRequest implements Runnable {
         }
     }
 
-    // NOT_STARTED: run() has not been called yet.
-    // WORKING: the build is in progress.
-    // DONE: the build has successfully finished.
-    // ERROR: the build has unsuccessfully finished.
-    public enum Status { NOT_STARTED, WORKING, DONE, ERROR }
+    /**
+     * Represents the status of a build request.
+     */
+    public enum Status {
+        /** run has not been called yet. Remove this and run when constructed, I think. */
+        NOT_STARTED,
+
+        /** The build is in progess. */
+        WORKING,
+
+        /** The build has successfully finished. */
+        DONE,
+
+        /** The build terminated with an error. */
+        ERROR
+    }
 
     // A unique identifier associated with this build.
     private String uuid;
@@ -54,7 +65,7 @@ public class BuildRequest implements Runnable {
     // is a preferable data structure.
     private ArrayList<ResultStructure> resultStructures;
 
-    // Pass in the target File in the constructor.
+    // run() should be called here, I think.
     BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
         this.buildInfo = buildInfo;
         resultStructures = null;

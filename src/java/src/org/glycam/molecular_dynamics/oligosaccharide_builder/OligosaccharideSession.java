@@ -25,7 +25,7 @@ public class OligosaccharideSession {
     private String structure;
 
     /**
-     * Linkage information, one per residue.
+     * Linkage information, one per residue. (Should be List).
      */
     private ArrayList<Linkage> linkages;
 
@@ -42,48 +42,13 @@ public class OligosaccharideSession {
     /**
      * Initialize the session with a sequence in GLYCAM condensed nomenclature.
      *
-     * @param sequence The sequence in GLYCAM condensed nomenclature.
+     * @param sequence The sequence in GLYCAM condensed nomenclature. (Should take Sequence).
      */
     public OligosaccharideSession(String sequence) throws java.io.IOException {
         this.structure = sequence;
         initLinkages(sequence);
         solvationSettings = null;
         buildRequest = null;
-    }
-
-    /**
-     * Returns the build request that's associated with this session.
-     *
-     * @return the build request associated with session or {@code null} if there isn't one.
-     */
-    public BuildRequest getBuildRequest() { return buildRequest; }
-
-    /**
-     * Resets the build request associated with this session, if there is one.
-     */
-    public void resetBuildRequest() { buildRequest = null; }
-
-    /**
-     * Builds the oligosaccharide(s).
-     *
-     * <p>This function returns before the build is finished. The {@link BuildRequest} object
-     * that's returned contains information about the status of the build.</p>
-     *
-     * <p>Future calls to {@link getBuildRequest} will return the {@link BuildRequest} that's
-     * created until {@link resetBuildRequest} is called.</p>
-     *
-     * @param outputDirectory the directory where the output files will be placed.
-     * @param uid I should get rid of this parameter, I think.
-     *
-     * @return the {@link BuildRequest}.
-     */
-    public BuildRequest build(File outputDirectory, String uid) {
-        BuildInfo build_info = buildProtocolBuffer();
-
-        buildRequest = new BuildRequest(build_info, outputDirectory, uid);
-        Thread thread = new Thread(buildRequest);
-        thread.start();
-        return buildRequest;
     }
 
     /**
@@ -110,7 +75,7 @@ public class OligosaccharideSession {
         solvationSettings = options;
     }
 
-    // TODO: Modify this to use protocol buffers.
+    // TODO: Modify this to use protocol buffers. This should be in Sequence.
     private void initLinkages(String structure) throws java.io.IOException {
         linkages = new ArrayList<Linkage>();
         boolean valid = true;
@@ -191,6 +156,41 @@ public class OligosaccharideSession {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the build request that's associated with this session.
+     *
+     * @return the build request associated with session or {@code null} if there isn't one.
+     */
+    public BuildRequest getBuildRequest() { return buildRequest; }
+
+    /**
+     * Resets the build request associated with this session, if there is one.
+     */
+    public void resetBuildRequest() { buildRequest = null; }
+
+    /**
+     * Builds the oligosaccharide(s).
+     *
+     * <p>This function returns before the build is finished. The {@link BuildRequest} object
+     * that's returned contains information about the status of the build.</p>
+     *
+     * <p>Future calls to {@link getBuildRequest} will return the {@link BuildRequest} that's
+     * created until {@link resetBuildRequest} is called.</p>
+     *
+     * @param outputDirectory the directory where the output files will be placed.
+     * @param uid I should get rid of this parameter, I think.
+     *
+     * @return the {@link BuildRequest}.
+     */
+    public BuildRequest build(File outputDirectory, String uid) {
+        BuildInfo build_info = buildProtocolBuffer();
+
+        buildRequest = new BuildRequest(build_info, outputDirectory, uid);
+        Thread thread = new Thread(buildRequest);
+        thread.start();
+        return buildRequest;
     }
 
     /**

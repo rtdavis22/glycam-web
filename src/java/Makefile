@@ -1,7 +1,7 @@
 BUILT_SOURCES = \
   src/org/glycam/molecular_dynamics/glycan_builder/BuildInfoPB.java \
   src/org/glycam/molecular_dynamics/glycan_builder/BuildResultsPB.java \
-  src/org/glycam/molecular_dynamics/glycoprotein_builder/PdbInfoPB.java
+  src/org/glycam/pdb/PdbFilePB.java
 
 PROTO_CMD = \
   ../../deps/protobuf/src/protoc \
@@ -15,6 +15,7 @@ CLASS_DEST = target/class
 JAVA_FILES = \
   $(BUILT_SOURCES) \
   src/org/glycam/CPP.java \
+  src/org/glycam/FileUtils.java \
   src/org/glycam/GlycamSequence.java \
   src/org/glycam/Linkage.java \
   src/org/glycam/LinkageValues.java \
@@ -28,7 +29,21 @@ JAVA_FILES = \
   src/org/glycam/molecular_dynamics/glycan_builder/ResultStructure.java \
   src/org/glycam/molecular_dynamics/glycoprotein_builder/BuildRequest.java \
   src/org/glycam/molecular_dynamics/glycoprotein_builder/GlycoproteinSession.java \
-  src/org/glycam/oligosaccharide_library/Item.java 
+  src/org/glycam/molecular_dynamics/glycoprotein_builder/GlycosylationSite.java \
+  src/org/glycam/molecular_dynamics/glycoprotein_builder/GlycosylationSiteList.java \
+  src/org/glycam/oligosaccharide_library/Item.java \
+  src/org/glycam/pdb/preprocessing/CysBondsSection.java \
+  src/org/glycam/pdb/preprocessing/HisMapping.java \
+  src/org/glycam/pdb/preprocessing/HisMappingsSection.java \
+  src/org/glycam/pdb/preprocessing/MenuItem.java \
+  src/org/glycam/pdb/preprocessing/MissingResiduesSection.java \
+  src/org/glycam/pdb/preprocessing/PreprocessingSection.java \
+  src/org/glycam/pdb/preprocessing/PreprocessingSession.java \
+  src/org/glycam/pdb/preprocessing/RemovedAtomsSection.java \
+  src/org/glycam/pdb/preprocessing/TerminalResiduesSection.java \
+  src/org/glycam/pdb/preprocessing/UnrecognizedAtomsSection.java \
+  src/org/glycam/pdb/preprocessing/UnrecognizedResidue.java \
+  src/org/glycam/pdb/preprocessing/UnrecognizedResiduesSection.java
 
 JFLAGS = -classpath $(PROTO_JAR)
 
@@ -39,6 +54,9 @@ src/org/glycam/molecular_dynamics/glycoprotein_builder/%.java: ../proto/%.proto
 	$(PROTO_CMD) $<
 
 src/org/glycam/molecular_dynamics/glycan_builder/%.java: ../proto/%.proto
+	$(PROTO_CMD) $<
+
+src/org/glycam/pdb/%.java: ../proto/%.proto
 	$(PROTO_CMD) $<
 
 # TODO: Make this so it works with different versions.

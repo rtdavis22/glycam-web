@@ -12,6 +12,7 @@ import java.io.File;
  *
  * @author Robert Davis
  */
+// remove this I think, or put it in pdb stuff.
 public class Utils {
     /**
      * Checks to see if a PDB file is valid.

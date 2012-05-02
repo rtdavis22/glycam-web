@@ -546,7 +546,7 @@ OH-P -OS-CT   1    1.20          0.0             2.         gg&gt ene.631g*/mp2
 OS-P -OS-CT   1    0.25          0.0            -3.         JCC,7,(1986),230
 OS-P -OS-CT   1    1.20          0.0             2.         gg&gt ene.631g*/mp2
 H1-CT-C -O    1    0.80          0.0            -1.         Junmei et al, 1999
-HC-CT-C -O    1    0.00          0.0            -2.         Explicit of wild card X-C-CT-X
+H1-CT-C -O    1    0.00          0.0            -2.         Explicit of wild card X-C-CT-X
 H1-CT-C -O    1    0.08        180.0             3.         Junmei et al, 1999
 HC-CT-C -O    1    0.80          0.0            -1.         Junmei et al, 1999
 HC-CT-C -O    1    0.00          0.0            -2.         Explicit of wild card X-C-CT-X
@@ -648,7 +648,6 @@ X -X -CA-H4         1.1          180.          2.           bsd.on C6H6 nmodes
 X -X -CA-H5         1.1          180.          2.           bsd.on C6H6 nmodes
 CB-CK-N*-CT         1.0          180.          2.
 C -CM-N*-CT         1.0          180.          2.           dac guess, 9/94
-C -CM-CM-CT         1.1          180.          2. 
 CT-O -C -OH         10.5         180.          2.
 CT-CV-CC-NA         1.1          180.          2.
 CT-CW-CC-NB         1.1          180.          2.
@@ -698,7 +697,6 @@ MOD4      RE
   C           1.9080  0.0860             OPLS
   N           1.8240  0.1700             OPLS
   N3          1.8240  0.1700             OPLS
-  NY          1.8240  0.1700             N in nitrile
   S           2.0000  0.2500             W. Cornell CH3SH and CH3SCH3 FEP's
   SH          2.0000  0.2500             W. Cornell CH3SH and CH3SCH3 FEP's
   P           2.1000  0.2000             JCC,7,(1986),230; 

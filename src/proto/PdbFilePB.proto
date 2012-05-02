@@ -1,0 +1,147 @@
+import "BuildInfoPB.proto";
+
+package pdb;
+option java_package = "org.glycam.pdb";
+
+// From C++ to Java
+message PreprocessingInfo {
+    repeated HisResidue his_residue = 1;
+
+    repeated CYSPair close_cys_pair = 2;
+
+    repeated ChainInfo chain_info = 3;
+
+    repeated PdbResidueInfo unknown_residue = 4;
+
+    repeated UnknownAtomInfo unknown_atom = 5;
+
+    repeated RemovedAtomInfo removed_atom = 6;
+
+    repeated ChainGap chain_gap = 7;
+}
+
+// From Java to C++
+message PreprocessingResults {
+    repeated PdbMapping his_mapping = 1;
+
+    repeated CYSPair close_cys_pair = 2;
+
+    repeated ChainInfo chain_info = 3;
+
+    repeated PdbResidueInfo residue_to_remove = 4;
+
+    repeated ChainGap chain_gap = 5;
+}
+
+// From C++ to Java
+message GlycoproteinInfo {
+    repeated GlycosylationSpot glycosylation_spot = 1;
+}
+
+message ChainGap {
+    required ChainInfo chain_info = 1;
+
+    required PdbResidueInfo start = 2;
+    required PdbResidueInfo end = 3;
+
+    repeated CTerminalType possible_cterminal = 4;
+    repeated NTerminalType possible_nterminal = 5;
+    
+    optional CTerminalType cterminal_type = 6 [default = NHCH3];
+    optional NTerminalType nterminal_type = 7 [default = COCH3];
+}
+
+enum HisMappingType {
+    HID = 1;
+    HIE = 2;
+    HIP = 3;
+    UNKNOWN = 4;
+}
+
+message HisResidue {
+    required PdbResidueInfo residue_info = 1;
+    repeated HisMappingType possible_mapping_type = 2;
+}
+
+enum NTerminalType {
+    COCH3 = 1;
+    NH3 = 2;
+}
+
+enum CTerminalType {
+    NH2 = 1;
+    NHCH3 = 2;
+    CO2 = 3;
+}
+
+
+message ChainInfo {
+    required PdbResidueInfo start = 1;
+    required PdbResidueInfo end = 2;
+
+    repeated NTerminalType possible_nterminal = 3;
+    repeated CTerminalType possible_cterminal = 4;
+
+    optional NTerminalType nterminal_type = 5 [default = NH3];
+    optional CTerminalType cterminal_type = 6 [default = CO2];
+}
+
+// From Java to C++
+message GlycoproteinBuildInfo {
+    required string pdb_file = 1;
+    required PreprocessingResults preprocessing_results = 2;
+    repeated GlycosylationInfo glycosylation = 3;
+}
+
+message CYSPair {
+    required PdbResidueInfo cys1 = 1;
+    required PdbResidueInfo cys2 = 2;
+    required double distance = 3;
+    required bool bonded = 4;
+}
+
+// remove this, its in preprocessinginfo.
+message PdbResidueInfo {
+    // This is the index of the residue in the gmml::Structure. It is redundant
+    // with the other 3, but both pieces of information may be useful. However,
+    // the redundancy should be reevaluated at some point.
+    //required int32 index = 1;
+
+    required string chain_id = 2;
+    required int32 res_num = 3;
+    required string i_code = 4;
+
+    // This should probably be made required
+    optional string name = 5;
+}
+
+message RemovedAtomInfo {
+    required PdbResidueInfo residue_info = 1;
+    required int32 serial = 2;
+    required string name = 3;
+}
+
+message UnknownAtomInfo {
+    required PdbResidueInfo residue_info = 1;
+    required int32 serial = 2;
+    required string name = 3;
+}
+
+message PdbMapping {
+    required PdbResidueInfo residue = 1;
+    required string mapped_name = 2;
+}
+
+message GlycosylationSpot {
+    required PdbResidueInfo info = 1;
+    required string name = 2;
+    required bool likely = 3 [default = false];
+    required double sasa = 4;
+    required string context = 5;
+}
+
+message GlycosylationInfo {
+    required GlycosylationSpot spot = 1;
+    required molecular_dynamics.glycan_builder.BuildInfo glycan = 2;
+}
+

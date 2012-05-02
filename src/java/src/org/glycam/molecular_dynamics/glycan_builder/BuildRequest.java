@@ -22,12 +22,12 @@ import java.util.TreeMap;
  */
 public class BuildRequest implements Runnable {
     /**
-     * The number of processors to use to fulfill this request.
+     * The number of processors used to fulfill the request.
      */
     private static final int NUM_PROCESSORS = 16;
 
     /**
-     * Represents the status of a build request.
+     * The status of a build request.
      */
     public enum Status {
         /** The build is in progess. */
@@ -40,17 +40,8 @@ public class BuildRequest implements Runnable {
         ERROR
     }
 
-    // A unique identifier associated with this build. GET rid of this.
-    private String uuid;
-
-    /**
-     * The directory where generated files will be written.
-     */
     private File outputDirectory;
 
-    /**
-     * The status of the build request.
-     */
     private Status status;
 
     /**
@@ -58,39 +49,32 @@ public class BuildRequest implements Runnable {
      */
     private BuildInfo buildInfo;
 
-    /**
-     * The conformations that this build request generated.
-     */
     private List<ResultStructure> resultStructures;
 
     /**
-     * Creates a start a build request.
+     * Creates and starts a build request.
      *
      * @param buildInfo a protocol buffer representing the glycan to be built.
-     * @param outputDirectory the directory where files will be written.
+     * @param outputDirectory the directory where output files will be written.
      */
-    BuildRequest(BuildInfo buildInfo, File outputDirectory, String uuid) {
+    BuildRequest(BuildInfo buildInfo, File outputDirectory) {
         this.buildInfo = buildInfo;
-        this.uuid = uuid;
         this.outputDirectory = outputDirectory;
         this.resultStructures = null;
         outputDirectory.mkdirs();
         new Thread(this).start();
     }
 
-    /**
-     * Returns the status of the build.
-     */
-    public Status getStatus() { return status; }
+    public Status getStatus() {
+        return status;
+    }
+
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
 
     /**
-     * Returns the unique ID associated with this build.
-     * Get rid of this!!.
-     */
-    public String getUUID() { return uuid; }
-
-    /**
-     * The structures that this request created.
+     * Returns structures that this request created.
      *
      * This is only valid if {@link getStatus} is Status.DONE.
      */
@@ -98,11 +82,6 @@ public class BuildRequest implements Runnable {
         return resultStructures;
     }
 
-    /**
-     * Returns the number of structures this request has built so far.
-     *
-     * @return the number of structures built so far.
-     */
     public int getStructuresBuiltSoFar() {
         String[] files = outputDirectory.list();
         int count = 0;
@@ -129,7 +108,7 @@ public class BuildRequest implements Runnable {
             String command = "build_torsions_mpi " + tempFile.getPath();
             Process process = CPP.execMPI(command, NUM_PROCESSORS, outputDirectory);
             results = BuildResults.parseFrom(process.getInputStream());
-            tempFile.delete();
+            //tempFile.delete();
             Logging.logger.info("process exited with value " + process.waitFor());
         } catch (IOException e) {
             Logging.logger.severe(e.getMessage());
@@ -160,7 +139,7 @@ public class BuildRequest implements Runnable {
     }
 
     /**
-     * A comparator for {@link ResultStructure}s based on energy.
+     * A comparator for ResultStructures based on energy.
      */
     private class StructureComparator implements java.util.Comparator<ResultStructure> {
         @Override
@@ -177,7 +156,7 @@ public class BuildRequest implements Runnable {
     }
 
     /**
-     * Rename the files according to the order of the result structures.
+     * Renames the files according to the order of the result structures.
      */
     private void renameFiles() {
         Map<Integer, Integer> map = new java.util.TreeMap<Integer, Integer>();
@@ -189,7 +168,8 @@ public class BuildRequest implements Runnable {
         for (File file : files) {
             String name = file.getName();
             String[] tokens = name.split("\\.");
-            if (tokens.length == 2 && (tokens[1].equals("pdb") || tokens[1].equals("rst"))) {
+            if (tokens.length == 2 && (tokens[1].equals("pdb") || tokens[1].equals("rst") ||
+                    (tokens[1].equals("top") && !tokens[0].equals("structure")))) {
                 int index = Integer.parseInt(tokens[0]) - 1;
                 int new_index = map.get(index) + 1;
                 file.renameTo(new File(outputDirectory, new_index + "." + tokens[1] + ".temp"));

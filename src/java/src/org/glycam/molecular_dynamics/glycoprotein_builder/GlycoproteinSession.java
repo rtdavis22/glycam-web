@@ -3,13 +3,10 @@ package org.glycam.molecular_dynamics.glycoprotein_builder;
 import org.glycam.CPP;
 import org.glycam.Logging;
 import org.glycam.molecular_dynamics.glycan_builder.GlycanSession;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.CYSPair;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.GlycosylationInfo;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.GlycosylationSpot;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbInfo;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbMapping;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbModificationInfo;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbResidueInfo;
+import org.glycam.pdb.PdbFilePB.GlycoproteinBuildInfo;
+import org.glycam.pdb.PdbFilePB.GlycoproteinInfo;
+import org.glycam.pdb.PdbFilePB.GlycosylationSpot;
+import org.glycam.pdb.PdbFilePB.PreprocessingResults;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,57 +16,51 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GlycoproteinSession {
-    public static class AttachedGlycan {
-        private PdbResidueInfo residueInfo;
-        private GlycanSession session;
-
-        public AttachedGlycan(PdbResidueInfo residueInfo, GlycanSession session) {
-            this.residueInfo = residueInfo;
-            this.session = session;
-        }
-
-        public PdbResidueInfo getResidueInfo() { return residueInfo; }
-
-        public GlycanSession getSession() { return session; }
-    }
-
     private File pdbFile;
 
-    // This is a protocol buffer with the relevant information needed by [C++ program here]
-    // to build the glycoprotein.
-    private PdbModificationInfo.Builder modificationInfo;
+    private GlycosylationSiteList nLinkingSites;
 
-    private List<GlycosylationSpot> nLinkingSpots;
-    private List<GlycosylationSpot> oLinkingSpots;
+    private GlycosylationSiteList oLinkingSites;
 
-    private GlycanSession currentGlycanSession;
+    private GlycanSession currentGlycanSession = null;
 
-    private List<AttachedGlycan> attachedGlycans;
+    private PreprocessingResults preprocessingResults = null;
 
     // The current build request. This is null if there is no build request.
     private BuildRequest buildRequest = null;
 
     public GlycoproteinSession(File pdbFile) {
         this.pdbFile = pdbFile;
-        this.nLinkingSpots = new ArrayList<GlycosylationSpot>();
-        this.oLinkingSpots = new ArrayList<GlycosylationSpot>();
-        initializePdbInfo();
-        this.currentGlycanSession = null;
-        this.attachedGlycans = new ArrayList<AttachedGlycan>();
+        this.nLinkingSites = new GlycosylationSiteList();
+        this.oLinkingSites = new GlycosylationSiteList();
+        initSession();
     }
 
-    public PdbModificationInfo.Builder getModificationInfo() { return modificationInfo; }
+    public void setPreprocessingResults(PreprocessingResults preprocessingResults) {
+        this.preprocessingResults = preprocessingResults;
+    }
 
-    public List<PdbMapping> getHisResidues() { return modificationInfo.getHisMappingList(); }
+    public GlycosylationSiteList getNLinkingSites() {
+        return nLinkingSites;
+    }
 
-    public List<CYSPair> getCloseCYSPairs() { return modificationInfo.getCloseCysPairList(); }
+    public GlycosylationSiteList getOLinkingSites() {
+        return oLinkingSites;
+    }
 
-    public List<GlycosylationSpot> getNLinkingSpots() { return nLinkingSpots; }
-    public List<GlycosylationSpot> getOLinkingSpots() { return oLinkingSpots; }
+    public GlycanSession getCurrentGlycanSession() {
+        return currentGlycanSession;
+    }
 
-    public GlycanSession getCurrentGlycanSession() { return currentGlycanSession; }
+    public boolean anyGlycosylatedSitesWithChainId() {
+        return nLinkingSites.isAnyGlycosylatedAndWithChainId() ||
+               oLinkingSites.isAnyGlycosylatedAndWithChainId();
+    }
 
-    public List<AttachedGlycan> getAttachedGlycans() { return attachedGlycans; }
+    public boolean anyGlycosylatedSitesWithICode() {
+        return nLinkingSites.isAnyGlycosylatedAndWithICode() ||
+               oLinkingSites.isAnyGlycosylatedAndWithICode();
+    }
 
     public BuildRequest getBuildRequest() { return buildRequest; }
 
@@ -77,12 +68,16 @@ public class GlycoproteinSession {
         currentGlycanSession = glycanSession;
     }
 
+    public void removeCurrentGlycanSession() {
+        currentGlycanSession = null;
+    }
+
     public void setBuildRequest(BuildRequest buildRequest) {
         this.buildRequest = buildRequest;
     }
 
     public BuildRequest build(File outputDirectory, String uid) {
-        PdbModificationInfo info = buildModificationInfo();
+        GlycoproteinBuildInfo info = buildBuildInfo();
         buildRequest = new BuildRequest(info, outputDirectory, uid);
         Thread thread = new Thread(buildRequest);
         thread.start();
@@ -93,13 +88,9 @@ public class GlycoproteinSession {
         buildRequest = null;
     }
 
-    private void initializePdbInfo() {
-        String command = "get_pdb_info " + pdbFile.getPath();
+    private void initSession() {
         try {
-            Process process = CPP.exec(command);
-            PdbInfo pdbInfo = PdbInfo.parseFrom(process.getInputStream());
-            initializeModificationInfo(pdbInfo);
-            Logging.logger.info("Process " + command + " exited with value " + process.waitFor());
+            initFromCpp();
         } catch (IOException e) {
             Logging.logger.severe(e.getMessage());
         } catch (InterruptedException e) {
@@ -107,49 +98,45 @@ public class GlycoproteinSession {
         }
     }
 
-    private void initializeModificationInfo(PdbInfo pdbInfo) {
-        this.modificationInfo = PdbModificationInfo.newBuilder();
-        List<PdbResidueInfo> hisResidues = pdbInfo.getHisResidueList();
-        for (PdbResidueInfo residue : hisResidues) {
-            PdbMapping.Builder mapping = PdbMapping.newBuilder();
-            mapping.setResidue(PdbResidueInfo.newBuilder(residue).clone());
-            mapping.setMappedName("HIE");
-            this.modificationInfo.addHisMapping(mapping);
-        }
+    private void initFromCpp() throws IOException, InterruptedException {
+        String command = getCppCommand();
+        Process process = CPP.exec(command);
+        initFromGlycoproteinInfo(GlycoproteinInfo.parseFrom(process.getInputStream()));
+        Logging.logger.info("Process " + command + " exited with value " + process.waitFor());
+    }
 
-        for (CYSPair pair : pdbInfo.getCloseCysPairList()) {
-            this.modificationInfo.addCloseCysPair(CYSPair.newBuilder(pair).clone());
-        }
+    private String getCppCommand() {
+        return "get_glycoprotein_info " + pdbFile.getPath();
+    }
 
-        for (GlycosylationSpot spot : pdbInfo.getGlycosylationSpotList()) {
+    private void initFromGlycoproteinInfo(GlycoproteinInfo glycoproteinInfo) {
+        initLinkingSites(glycoproteinInfo.getGlycosylationSpotList());
+
+        nLinkingSites.sortByLikeliness();
+        oLinkingSites.sortByLikeliness();
+    }
+
+    private void initLinkingSites(List<GlycosylationSpot> spots) {
+        // Maybe have the PB send have 2 lists so I don't have to do this here.
+        for (GlycosylationSpot spot : spots) {
             String name = spot.getName();
             if (name.equals("ASN")) {
-                nLinkingSpots.add(spot);
+                nLinkingSites.add(spot);
             } else if (name.equals("SER") || name.equals("THR")) {
-                oLinkingSpots.add(spot);
+                oLinkingSites.add(spot);
             }
         }
-
-        Collections.sort(nLinkingSpots, new GlycosylationSpotComparator());
-        Collections.sort(oLinkingSpots, new GlycosylationSpotComparator());
     }
 
-    private class GlycosylationSpotComparator implements Comparator<GlycosylationSpot> {
-        @Override
-        public int compare(GlycosylationSpot lhs, GlycosylationSpot rhs) {
-            return lhs.getName().compareTo(rhs.getName());
-        }
-    }
+    private GlycoproteinBuildInfo buildBuildInfo() {
+        GlycoproteinBuildInfo.Builder info = GlycoproteinBuildInfo.newBuilder();
 
-    private PdbModificationInfo buildModificationInfo() {
-        PdbModificationInfo.Builder info = modificationInfo.clone();
         info.setPdbFile(pdbFile.getPath());
-        for (AttachedGlycan glycan : attachedGlycans) {
-            GlycosylationInfo.Builder glycosylationInfo = GlycosylationInfo.newBuilder();
-            glycosylationInfo.setSpot(glycan.getResidueInfo());
-            glycosylationInfo.setGlycan(glycan.getSession().buildProtocolBuffer());
-            info.addGlycosylation(glycosylationInfo.build());
-        }
+        info.setPreprocessingResults(preprocessingResults);
+
+        nLinkingSites.addGlycosylatedSitesToBuildInfo(info);
+        oLinkingSites.addGlycosylatedSitesToBuildInfo(info);
+
         return info.build();
     }
 }

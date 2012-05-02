@@ -35,19 +35,35 @@ public class ResultStructure {
     /**
      * Constructs a result structure.
      */
-    public ResultStructure(Map<Integer, LinkageValues> angles, int index, double energy,
-                           double boltzmann) {
+    ResultStructure(Map<Integer, LinkageValues> angles, int index, double energy,
+                    double boltzmann) {
         this.angles = angles;
         this.index = index;
         this.energy = energy;
         this.boltzmann = boltzmann;
     }
 
-    public Map<Integer, LinkageValues> getAngles() { return angles; }
-    public int getIndex() { return index; }
-    public double getEnergy() { return energy; }
-    public double getBoltzmann() { return boltzmann; }
+    public Map<Integer, LinkageValues> getAngles() {
+        return angles;
+    }
 
-    public void setIndex(int index) { this.index = index; }
-    public void setBoltzmann(double boltzmann) { this.boltzmann = boltzmann; }
+    public int getIndex() {
+        return index;
+    }
+
+    public double getEnergy() {
+        return energy;
+    }
+
+    public double getBoltzmann() {
+        return boltzmann;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setBoltzmann(double boltzmann) {
+        this.boltzmann = boltzmann;
+    }
 }

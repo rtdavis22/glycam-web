@@ -22,6 +22,19 @@ public class Linkage {
         this.name = name;
         this.flexibleOmega = flexibleOmega;
         this.flexiblePhi = flexiblePhi;
+        
+    }
+
+    public Linkage(Linkage linkage) {
+        this.name = linkage.name;
+        this.flexibleOmega = linkage.flexibleOmega;
+        this.flexiblePhi = linkage.flexiblePhi;
+        this.omegaValues = new ArrayList<Double>(linkage.omegaValues);
+        this.phiValues = new ArrayList<Double>(linkage.phiValues);
+        this.psiValues = new ArrayList<Double>(linkage.psiValues);
+        this.phiSet = linkage.phiSet;
+        this.psiSet = linkage.psiSet;
+        this.omegaSet = linkage.omegaSet;
     }
 
     // Accessors

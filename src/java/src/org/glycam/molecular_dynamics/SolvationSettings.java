@@ -16,16 +16,7 @@ public class SolvationSettings {
      */
     public static final double DEFAULT_CLOSENESS = 1.5;
 
-    /**
-     * The shape of the solvent.
-     */
-    public enum Shape {
-        /** A solvent that forms a rectangle around the solute. */
-        RECTANGULAR,
-
-        /** A solvent that forms a cube around the solute. */
-        CUBIC
-    } 
+    public enum Shape { RECTANGULAR, CUBIC }
 
     /**
      * The amount of solvent buffer, in Angstroms, on each side.
@@ -37,14 +28,8 @@ public class SolvationSettings {
      */
     private double closeness;
 
-    /**
-     * The shape of the solvent box.
-     */
     private Shape shape;
 
-    /**
-     * Initializes the solvation parameters to appropriate default values.
-     */
     public SolvationSettings() {
         this.shape = Shape.RECTANGULAR;
         this.buffer = DEFAULT_BUFFER;
@@ -66,8 +51,6 @@ public class SolvationSettings {
 
     /**
      * Returns the amount of solvent buffer in Angstroms on each side.
-     *
-     * @return the buffer in Angstroms.
      */
     public double getBuffer() {
         return buffer;
@@ -75,26 +58,17 @@ public class SolvationSettings {
 
     /**
      * Returns the closest distance, in Angstoms, a solvent atom can be to a solute atom.
-     *
-     * @return the distance in Angstroms.
      */
     public double getCloseness() {
         return closeness;
     }
 
-    /**
-     * Returns the shape of the solvent.
-     *
-     * @return the shape.
-     */
     public Shape getShape() {
         return shape;
     }
 
     /**
      * Sets the amount of solvent buffer, in Angstoms, on each side.
-     *
-     * @param buffer the buffer in Angstroms.
      */
     public void setBuffer(double buffer) {
         this.buffer = buffer;
@@ -102,18 +76,11 @@ public class SolvationSettings {
 
     /**
      * Sets the closest distance, in Angstoms, a solvent atom can be to a solute atom.
-     *
-     * @param closeness the distance in Angstroms.
      */
     public void setCloseness(double closeness) {
         this.closeness = closeness;
     }
 
-    /**
-     * Sets the shape of the solvent.
-     *
-     * @param shape the shape.
-     */
     public void setShape(Shape shape) {
         this.shape = shape;
     }

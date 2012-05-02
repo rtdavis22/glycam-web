@@ -42,6 +42,7 @@ using namespace gmml::carbohydrate;
 
 using molecular_dynamics::glycan_builder::BuildInfo;
 using molecular_dynamics::glycan_builder::BuildResults;
+using molecular_dynamics::glycan_builder::SolvationInfo;
 
 std::vector<std::string>& split(const std::string& str, char delimiter,
                                 std::vector<std::string>& elements) {
@@ -61,10 +62,10 @@ int get_index(vector<double>& vec, double number)  {
     return std::distance(vec.begin(), it);
 }
 
-struct SolvationInfo {
-    double distance;
-    double closeness;
-};
+//struct SolvationInfo {
+//    double distance;
+//    double closeness;
+//};
 
 int main(int argc, char *argv[]) {
     int rank, size;
@@ -78,13 +79,10 @@ int main(int argc, char *argv[]) {
     string gas_phase_minimize_file = "min.in";
     string solvated_minimize_file = "solvated_min.in";
 
-    load_parameter_file("param_files/parm99.dat.mod");
-    load_parameter_file("param_files/Glycam_06g.dat");
-    load_prep_file("prep_files/Glycam_06.prep");
-    load_prep_file("prep_files/Neu5Gc_a_06.prep");
-    load_prep_file("prep_files/ACE.prep");
-    load_prep_file("prep_files/MEX.prep");
-    load_prep_file("prep_files/sulfate.prep");
+    load_parameter_file("param_files/parm99.dat");
+    load_parameter_file("param_files/GLYCAM_06h.dat");
+    load_prep_file("prep_files/GLYCAM_06h.prep");
+    // Why is this here?
     load_library_file("library_files/all_amino94.lib");
     load_library_file("library_files/tip3pbox.off");
 
@@ -101,18 +99,28 @@ int main(int argc, char *argv[]) {
     GlycanConformationBuilder b(*structure);
 
 
+    GlycamParser parser;
+    ArrayTree<ParsedResidue*> *tree = parser.get_array_tree(glycan);
+    vector<int> sugar_indices(tree->size());
+    int cur_index = 0;
+    for (int i = 0; i < tree->size(); i++) {
+        sugar_indices[i] = cur_index;
+        ParsedResidue *residue = (*tree)[i].first;
+        int derivative_count = residue->derivatives.size();
+        cur_index += derivative_count;
+        cur_index++;
+    }
     for (int i = 0; i < build_info.linkage_size(); i++) {
         const BuildInfo::Linkage& linkage = build_info.linkage(i);
         for (int j = 0; j < linkage.phi_value_size(); j++)
-            b.add_phi_value(i, linkage.phi_value(j));
+            b.add_phi_value(sugar_indices[i], linkage.phi_value(j));
         for (int j = 0; j < linkage.psi_value_size(); j++)
-            b.add_psi_value(i, linkage.psi_value(j));
+            b.add_psi_value(sugar_indices[i], linkage.psi_value(j));
         for (int j = 0; j < linkage.omega_value_size(); j++)
-            b.add_omega_value(i, linkage.omega_value(j));
+            b.add_omega_value(sugar_indices[i], linkage.omega_value(j));
     }
 
 
-    SolvationInfo *solvation_info = NULL;
 
     list<GCBStructure*> *structures = b.build();
     list<GCBStructure*>::iterator it;
@@ -126,16 +134,18 @@ int main(int argc, char *argv[]) {
         MinimizationResults *results =
             (*it)->minimize(gas_phase_minimize_file);
 
-        if (solvation_info != NULL) {
+        if (build_info.has_solvation_info()) {
+            const SolvationInfo& solvation_info = build_info.solvation_info();
             LibraryFileStructure *b = build_library_file_structure("TIP3PBOX");
             //cout << "solvating with parameters " << solvation_info->distance <<
             //        " " << solvation_info->closeness << endl;
-            SolvatedStructure *ss = solvate(**it, *b, solvation_info->distance,
-                                            solvation_info->closeness);
+            SolvatedStructure *ss = solvate(**it, *b, solvation_info.distance(),
+                                            solvation_info.closeness());
             ss->minimize(solvated_minimize_file);
             ss->print_pdb_file(to_string(index) + ".pdb");
             ss->print_coordinate_file(to_string(index) + ".rst");
-            ss->print_amber_top_file(to_string(index) + ".top");
+            //if (it == structures->begin())
+                ss->print_amber_top_file(to_string(index) + ".top");
             delete ss;
             delete b;
         } else {
@@ -155,7 +165,21 @@ int main(int argc, char *argv[]) {
     delete structure;
 
     if (rank == 0) {
-        vector<vector<vector<double> > > *build_info = b.get_build_info();
+        GlycamParser new_parser;
+        new_parser.dont_parse_derivatives();
+        GlycanConformationBuilder gcb(*glycam_build(new_parser.parse(glycan)));
+        for (int i = 0; i < build_info.linkage_size(); i++) {
+            const BuildInfo::Linkage& linkage = build_info.linkage(i);
+            for (int j = 0; j < linkage.phi_value_size(); j++)
+                gcb.add_phi_value(i, linkage.phi_value(j));
+            for (int j = 0; j < linkage.psi_value_size(); j++)
+                gcb.add_psi_value(i, linkage.psi_value(j));
+            for (int j = 0; j < linkage.omega_value_size(); j++)
+                gcb.add_omega_value(i, linkage.omega_value(j));
+        }
+
+
+        vector<vector<vector<double> > > *build_info = gcb.get_build_info();
 
         // linkage_changes[i][j] is true if the ith linkage's phi/psi/omega (j)
         // varies.    

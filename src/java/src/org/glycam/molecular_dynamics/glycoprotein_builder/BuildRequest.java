@@ -2,7 +2,7 @@ package org.glycam.molecular_dynamics.glycoprotein_builder;
 
 import org.glycam.CPP;
 import org.glycam.Logging;
-import org.glycam.molecular_dynamics.glycoprotein_builder.PdbInfoPB.PdbModificationInfo;
+import org.glycam.pdb.PdbFilePB.GlycoproteinBuildInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,9 +21,9 @@ public class BuildRequest implements Runnable {
 
     private Status status;
 
-    private PdbModificationInfo buildInfo;
+    private GlycoproteinBuildInfo buildInfo;
 
-    public BuildRequest(PdbModificationInfo buildInfo, File outputDirectory, String uuid) {
+    public BuildRequest(GlycoproteinBuildInfo buildInfo, File outputDirectory, String uuid) {
         this.buildInfo = buildInfo;
         this.outputDirectory = outputDirectory;
         this.uuid = uuid;

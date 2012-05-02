@@ -6,9 +6,11 @@ import org.glycam.Linkage;
 import org.glycam.Logging;
 import org.glycam.molecular_dynamics.SolvationSettings;
 import org.glycam.molecular_dynamics.glycan_builder.BuildInfoPB.BuildInfo;
+import org.glycam.molecular_dynamics.glycan_builder.BuildInfoPB.SolvationInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,11 +27,8 @@ public class GlycanSession {
     /**
      * Linkage information, one per residue.
      */
-    private final List<Linkage> linkages;
+    private List<Linkage> linkages;
 
-    /**
-     * Information for how to solvate the glycan.
-     */
     private SolvationSettings solvationSettings = null;
 
     /**
@@ -37,26 +36,25 @@ public class GlycanSession {
      */
     private BuildRequest buildRequest = null;
 
-    /**
-     * Initialize the session with a sequence in GLYCAM condensed nomenclature.
-     *
-     * @param sequence The sequence in GLYCAM condensed nomenclature.
-     */
     public GlycanSession(GlycamSequence sequence) throws IOException {
         this.sequence = sequence;
         this.linkages = sequence.getLinkages();
     }
 
-    /**
-     * Returns the sequence in GLYCAM condensed nomenclature.
-     */
+    public GlycanSession(GlycanSession glycanSession) {
+        this.sequence = glycanSession.sequence;
+        this.linkages = new ArrayList<Linkage>();
+        for (Linkage linkage : glycanSession.linkages) {
+            linkages.add(new Linkage(linkage));
+        }
+    }
+
     public GlycamSequence getSequence() {
         return sequence;
     }
 
     /**
      * Returns the linkages of the glycan.
-     * Don't use this anymore!
      */
     public List<Linkage> getLinkages() {
         return linkages;
@@ -70,16 +68,10 @@ public class GlycanSession {
         return linkages.size();
     }
 
-    /**
-     * Returns the solvation information associated with this session.
-     */
     public SolvationSettings getSolvationSettings() {
         return solvationSettings;
     }
 
-    /**
-     * Sets the solvation information associated with this session.
-     */
     public void setSolvationSettings(SolvationSettings options) {
         solvationSettings = options;
     }
@@ -146,19 +138,16 @@ public class GlycanSession {
     /**
      * Builds the glycan(s).
      *
-     * <p>This function returns before the build is finished. The {@link BuildRequest} object
-     * that's returned contains information about the status of the build.</p>
+     * This function returns before the build is finished. The BuildRequest object that's returned
+     * contains information about the status of the build.
      *
-     * <p>Future calls to {@link getBuildRequest} will return the {@link BuildRequest} that's
-     * created until {@link resetBuildRequest} is called.</p>
+     * Future calls to getBuildRequest() will return the BuildRequest that's created until
+     * resetBuildRequest() is called or until build() is called again.
      *
      * @param outputDirectory the directory where the output files will be placed.
-     * @param uid I should get rid of this parameter, I think.
-     *
-     * @return the {@link BuildRequest}.
      */
-    public BuildRequest build(File outputDirectory, String uid) {
-        buildRequest = new BuildRequest(buildProtocolBuffer(), outputDirectory, uid);
+    public BuildRequest build(File outputDirectory) {
+        buildRequest = new BuildRequest(buildProtocolBuffer(), outputDirectory);
         return buildRequest;
     }
 
@@ -178,6 +167,14 @@ public class GlycanSession {
             for (double value : linkage.getOmegaValues())
                 linkageInfo.addOmegaValue(value);
             info.addLinkage(linkageInfo);
+        }
+
+        if (solvationSettings != null) {
+            SolvationInfo.Builder solvationInfo = SolvationInfo.newBuilder();
+            solvationInfo.setDistance(solvationSettings.getBuffer());
+            solvationInfo.setCloseness(solvationSettings.getCloseness());
+            solvationInfo.setShape(SolvationInfo.Shape.CUBIC);
+            info.setSolvationInfo(solvationInfo.build());
         }
 
         return info.build();

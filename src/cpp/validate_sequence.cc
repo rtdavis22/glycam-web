@@ -16,11 +16,7 @@
 int main(int argc, char *argv[]) {
     gmml::add_path(std::string(PROJECT_ROOT) + "dat/prep_files/");
     
-    gmml::load_prep_file("Glycam_06.prep");
-    gmml::load_prep_file("Neu5Gc_a_06.prep");
-    gmml::load_prep_file("sulfate.prep");
-    gmml::load_prep_file("ACE.prep");
-    gmml::load_prep_file("MEX.prep");
+    gmml::load_prep_file("GLYCAM_06h.prep");
     
     if (argc < 2) {
         return -1;

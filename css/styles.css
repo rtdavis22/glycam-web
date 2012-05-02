@@ -1,0 +1,546 @@
+/*
+ * navigation
+ */
+@import url("nav.css");
+
+/*
+ * global
+ */
+* {
+  font-family:"Times New Roman", Times, serif;
+  font-color:black;
+  margin:0; padding:0; 
+  border:none; 
+}
+
+p {
+  font-size:14px;
+}
+
+ul { 
+  list-style-type:none; 
+}
+
+a { 
+  color:black; 
+  text-decoration:none; 
+}
+
+body { 
+  text-align:center; 
+}
+
+textarea { 
+  resize:none; 
+  border:1px solid black; 
+}
+
+#wrapper { 
+  width:850px; 
+  margin: auto; 
+}
+
+/*
+ * tooltips
+ */
+a.tooltip {
+  border-bottom:1px solid blue;
+  color:blue;
+}
+
+a.tooltip:hover {
+  position: relative;
+}
+
+a.tooltip span {
+  display: none;
+}
+
+a.tooltip:hover span {
+  display: block;
+  width:125px;
+  color:black;
+  text-decoration:none;
+  position:absolute; top:10px; left:0;
+  padding:5px; margin:10px; 
+  z-index:100;
+  background: #f0f0f0; 
+  border: 1px dotted #c0c0c0;
+  opacity: 0.9;
+}
+
+/*
+ * graphviz diagrams
+ */
+img.structure { 
+  max-width:800px; 
+}
+
+/*
+ * button used throughout
+ */
+.button { 
+  font-size:14px; 
+  border:1px solid #aaa; 
+  padding:5px 7px 7px; 
+  font-weight:bold; 
+  background:url(../img/header.gif) 
+}
+
+.button:hover { 
+  background:url(../img/header_over.gif); 
+}
+
+/*
+ * footer
+ */
+#footer p { 
+  font-size:13px; 
+}
+
+/*
+ * home
+ */
+#home {
+  text-align:center;
+}
+
+#home #tools {
+  margin: 0 auto;
+  border:1px solid black;
+  text-align:center;
+  width:500px;
+}
+
+#home #tools img {
+  width: 64px;
+  height: 64px;
+  margin: 10px;
+}
+
+#home #tools h3 {
+  margin-left: 5px;
+  text-align: left;
+}
+
+#home #tools span {
+  text-align: right;
+  display: block;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+#home #tools span:hover {
+  text-decoration: underline;
+}
+
+/*
+ * tools home
+ */
+#tools table {
+  width:800px;
+  margin:0 auto;
+  border:1px solid black;
+  border-collapse:collapse;
+}
+
+#tools table td {
+  height:100px;
+  padding:8px;
+  vertical-align:top;
+  border:1px solid black;
+  width:50%;
+}
+
+#tools table a:hover {
+  border-bottom:1px solid black;
+}
+
+#tools table img {
+  margin-right:5px;
+  margin-bottom:5px;
+  width:64px;
+  height:64px;
+  float:left;
+}
+
+#tools table p {
+  font-size:14px;
+  text-align:left;
+}
+
+/*
+ * wait page
+ */
+#waitpage { 
+  text-align:center; 
+}
+
+#waitpage p { 
+  font-size:20px;
+  font-weight:bold;
+}
+
+.instruction {
+  font-weight:bold;
+  font-size:16px;
+}
+
+.error { font-weight:bold; color:red; }
+
+/*
+ * steps on tools pages
+ */
+#steps { 
+  margin:10px; 
+  display:inline-block; 
+  border-top:1px solid black; 
+  border-bottom:1px solid black; 
+}
+
+#steps span { 
+  margin:10px; 
+  color:#aaaaaa; 
+  display:inline-block; 
+}
+
+#steps .selected { 
+  color:black; 
+}
+
+/*
+ * point-and-click tool
+ */
+#point_and_click #direction {
+  font-size:16px;
+}
+
+#point_and_click input[type="button"] { 
+  font-size:12px; 
+  width:80px; 
+  padding:4px; 
+  border:1px solid #aaa;  
+  font-weight:bold; 
+  background:url(../img/header.gif); 
+}
+
+#point_and_click input[type="button"]:hover { 
+  background:url(../img/header_over.gif); 
+}
+
+#point_and_click input[type="button"].disabled:hover { 
+  background:url(../img/header.gif);  
+}
+
+#point_and_click #leftcolumn { 
+  float:left; 
+  text-align:center; 
+}
+
+#point_and_click #leftcolumn input[type="button"] { 
+  width:75px; 
+}
+
+#point_and_click #rightcolumn { 
+  float:right; text-align:right; 
+}
+
+#point_and_click #rightcolumn #residues input[type="button"] { 
+  margin:1px;  
+  width:75px; 
+}
+
+#point_and_click #rightcolumn #terminals input[type="button"] { 
+  margin:1px; 
+  width:75px; 
+}
+
+#point_and_click #rightcolumn #linkages input[type="button"] { 
+  margin:1px; 
+  width:75px; 
+}
+
+#point_and_click #rightcolumn #derivatives input[type="button"] {
+  margin:1px;
+  width:100px;
+}
+
+#point_and_click #rightcolumn #positions div {
+  text-align:center;
+  width:50px;
+}
+
+#point_and_click #branch_options input[type="button"] { 
+  width:auto;
+  padding:0px;
+  margin:0px; 
+}
+
+#point_and_click #branch_options span.branch_residue { 
+  border:1px solid black; 
+}
+
+#point_and_click #branch_options strong { 
+  font-size:20px; 
+}
+
+#point_and_click #sequence { 
+  margin:10px auto; 
+  width:80%; 
+  height:50px; 
+  text-align:left; 
+}
+
+#point_and_click #finish_branch { 
+  width:110px; 
+}
+
+#point_and_click #add_branch { 
+  width:100px; 
+}
+
+#point_and_click #add_derivative {
+  width:110px;
+}
+
+#point_and_click #apply_derivatives {
+  width:140px;
+}
+
+/*
+ * input glycan
+ * remove the build glycan things below.
+ */
+.input_glycan ul li input[type="button"] {
+  border:1px solid white;
+  background-color:white;
+}
+
+.input_glycan ul li input[type="button"]:hover {
+  border-bottom:1px solid black
+}
+
+.input_glycan img {
+  display:inline-block;
+}
+
+.input_glycan textarea {
+  margin:15px;
+  width:80%;
+  height:80px;
+}
+
+/*
+ * build glycan
+ */
+#build_glycan ul li input[type="button"] {
+  border:1px solid white; 
+  background-color:white;
+}
+
+#build_glycan ul li input[type="button"]:hover { 
+  border-bottom:1px solid black 
+}
+
+#build_glycan img { 
+  display:inline-block; 
+}
+
+#build_glycan textarea { 
+  margin:15px; 
+  width:80%; 
+  height:80px; 
+}
+
+
+
+/*
+ * mdfiles
+ */
+#mdfiles_options li { 
+  padding:3px; 
+}
+
+#mdfiles_options input[type="button"] {
+  border:1px solid white;
+  background-color:white;
+  font-size:16px;
+  font-family:serif;
+}
+
+#mdfiles_options input[type="button"]:hover {
+  border-bottom:1px solid black
+}
+
+#mdfiles_setangles table { 
+  text-align:center; 
+  margin-left:auto; 
+  margin-right:auto; 
+}
+
+#mdfiles_setangles table td { 
+  padding:7px; 
+}
+
+#mdfiles_setangles table input[type="text"] { 
+  padding:3px; 
+  width:50px; 
+  border:1px solid black; 
+}
+
+#mdfiles_rotamers table{ 
+  text-align:center; 
+  margin-left:auto; 
+  margin-right:auto; 
+}
+
+#mdfiles_rotamers td,th { 
+  padding:7px;
+}
+
+#solvation_options {
+  text-align:center;
+}
+
+#solvation_options input[type="text"] {
+  border: 1px solid black;
+  width: 40px;
+  padding: 2px;
+  text-align:center;
+}
+
+#solvation_options p {
+  font-size:16px;
+}
+
+#mdfiles_download table { 
+  margin:0 auto;
+  border-collapse:collapse; 
+  border-bottom:1px solid black; 
+}
+
+#mdfiles_download table td { 
+  border:1px solid black;
+  padding:2px;  
+}
+
+#mdfiles_download table .noborder { 
+  border:none;  
+}
+
+#mdfiles_download .firstrow td {  
+  border-bottom:none; 
+}
+
+#mdfiles_download table .noleftright { 
+  border-left:none; 
+  border-right:none; 
+}
+
+#mdfiles_download table .anglecolumn {
+  width:50px;
+}
+
+#mdfiles_download input[type="button"].button { 
+  font-size:12px; 
+}
+
+/*
+ * Glycoprotein Builder
+ */
+#glycoprotein_builder #choose_locations table {
+  margin: 0 auto;
+}
+
+#glycoprotein_builder #choose_locations td.likely {
+  font-weight:bold;
+}
+
+#glycoprotein_builder #choose_locations tr.not_likely {
+  display:none;
+}
+
+#glycoprotein_builder #choose_locations .low_sasa {
+  color:red;
+}
+
+#glycoprotein_builder #choose_locations .high_sasa {
+  color:green;
+}
+
+#glycoprotein_builder #choose_locations table img {
+  max-width:100px;
+  margin:10px;
+}
+
+/*
+ * Oligosaccharide Library
+ */
+#oligosaccharide_library {
+  width:650px;
+  margin:auto;
+  padding-left:3px;
+  padding-right:3px;
+}
+
+#oligosaccharide_library #section_description {
+  text-align:left;
+}
+
+#oligosaccharide_library #grid {
+  text-align:center;
+}
+
+#oligosaccharide_library #grid td {
+  width:210px;
+  text-align:center;
+  margin:2px;
+  border: 1px solid #DDDDDD;
+  border-radius: 10px;
+}
+
+#oligosaccharide_library #grid .item:hover {
+  border: 1px solid #000000;
+}
+
+#oligosaccharide_library #grid .item img {
+  max-width:120px;
+  margin-bottom:10px;
+}
+
+#oligosaccharide_library #grid .item p {
+  font-size:14px;
+  text-align:center;
+}
+
+#oligosaccharide_library #grid .item input[type="button"] {
+  margin: 5px 5px;
+  background-color: #EEEEEE;
+  border: 1px solid black;
+  width:60px;
+}
+
+
+
+/*
+ * PDB Preprocessor
+ */
+#pdb_preprocessor #missing_residues table td {
+  padding:0px 20px;
+}
+
+#pdb_preprocessor #missing_residues table .gap {
+  //width:20px;
+}
+
+#pdb_preprocessor #missing_residues table td input {
+}
+
+/* Utilities */
+.floatright { float:right; }
+.floatleft { float:left; }
+.clear { clear:both; }
+.italic { font-style:italic; }
+.bold { font-weight:bold; }
+.breakword { word-wrap:break-word; }

@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+ <title>GLYCAM Carbohydrate Builder</title>
+ <link href="/css/styles.css" type="text/css" rel="Stylesheet" />
+ <script type="text/javascript" src="/js/PointAndClick.js"></script> 
+</head>
+<body onload="PointAndClick.init();">
+ <div id="wrapper">
+  <div id="point_and_click">
+   <p id="direction"></p><br />
+   <table id="leftcolumn">
+    <tr><td colspan="2"><strong>Isomer</strong></td></tr>
+    <tr>
+     <td><input id="L" type="button" value="L" /></td>
+     <td><input id="D" type="button" value="D" /></td>
+    </tr>
+    <tr><td colspan="2"><strong>Ring Type</strong></td></tr>
+    <tr>
+     <td><input id="furanose" type="button" value="f" /></td>
+     <td><input id="pyranose" type="button" value="p" /></td>
+    </tr>
+    <tr><td colspan="2"><strong>Configuration</strong></td></tr>
+    <tr>
+     <td><input id="alpha" type="button" value="&#945;" /></td>
+     <td><input id="beta" type="button" value="&#946;" /></td>
+    </tr>
+   </table>
+   <div id="rightcolumn">
+    <strong>Monosaccharide</strong>
+    <div id="residues"></div>
+    <br />
+    <div id="linkage_section">
+     <strong>Linkage</strong>
+     <div id="linkages">
+      <div id="one_linkages">
+      </div>
+      <div id="two_linkages">
+      </div>
+     </div>
+     <br />
+    </div>
+    <div style="display:none;" id="derivative_section">
+     <strong>Derivative</strong>
+     <div id="derivatives"></div>
+    </div>
+    <div id="position_section" style="display:none;">
+     <strong>Position</strong>
+     <div id="positions"></div>
+    </div>
+    <div id="terminal_section">
+     <strong>Aglycon</strong>
+     <div id="terminals"></div>
+    </div>
+   </div>
+   <div class="clear"></div>
+   <div id="branch_options" style="display:none;margin:10px;"></div>
+   <div id="current_sequence" style="display:none;margin:10px;"></div>
+   <textarea id="sequence" rows="2"></textarea><br />
+   <input id="undo" type="button" onclick="PointAndClick.undo();" value="Undo" />
+   <input id="clear" type="button" onclick="PointAndClick.clear();" value="Clear" />
+   <input id="add_derivative" style="display:none;" type="button" onclick="PointAndClick.add_derivative_click();" value="Add Derivative" disabled />
+   <input id="add_branch" style="display:none;" onclick="PointAndClick.add_branch_click();" type="button" value="Add Branch" disabled />
+   <input id="finish_branch" style="display:none;" onclick="PointAndClick.finish_branch_click();"
+          type="button" value="Finish Branch" style="width:100px;display:none;" />
+   <input id="apply_derivatives" style="display:none;"
+          type="button" value="Apply Derivatives" />
+   <input id="continue" type="button" onclick="PointAndClick.done_click();" value="Done" disabled />
+  </div> <!-- builder -->
+ </div> <!-- wrapper -->
+</body>
+</html>

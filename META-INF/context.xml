@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+ <Resource name="jdbc/oligosaccharide_library" 
+           auth="Container"
+           type="javax.sql.DataSource" 
+           username="robert" 
+           password="robert"
+           driverClassName="com.mysql.jdbc.Driver"
+           url="jdbc:mysql://localhost:3306/oligosaccharide_library"
+           maxActive="200" 
+           maxIdle="3" />
+
+ <Resource name="jdbc/glycamweb"
+            auth="Container"
+            type="javax.sql.DataSource" 
+            username="robert" 
+            password="robert"
+            driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/glycamweb"
+            maxActive="200" 
+            maxIdle="3" />
+
+</Context>

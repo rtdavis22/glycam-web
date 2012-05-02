@@ -1,0 +1,5 @@
+/src/org/glycam/configuration/Configuration.java
+/src/org/glycam/molecular_dynamics/glycan_builder/BuildInfoPB.java
+/src/org/glycam/molecular_dynamics/glycan_builder/BuildResultsPB.java
+/src/org/glycam/pdb/PdbFilePB.java
+/target/

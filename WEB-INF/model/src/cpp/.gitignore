@@ -1,0 +1,17 @@
+.deps/
+.libs/
+BuildInfoPB.pb.cc
+BuildInfoPB.pb.h
+BuildResultsPB.pb.cc
+BuildResultsPB.pb.h
+PdbFilePB.pb.cc
+PdbFilePB.pb.h
+PdbInfoPB.pb.cc
+PdbInfoPB.pb.h
+build_glycoprotein
+draw_glycan
+get_glycoprotein_info
+get_linkages
+get_pdb_preprocessing_info
+validate_sequence
+/mpi/build_torsions_mpi

@@ -7,3 +7,5 @@ attempt to be trimmed where possible.
 - Download jmol and place it in /deps/
 - Download NAccess and place it in model/deps 
 - Download NetOGlyc and place it in model/deps
+
+We should also include instructions on setting up the MySQL database.

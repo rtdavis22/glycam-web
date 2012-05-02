@@ -9,7 +9,7 @@
  <%@ include file="/inc/head.inc" %>
  <script type="text/javascript" src="/js/Jmol.js"></script>
  <script type="text/javascript">
-  jmolInitialize("/applets/jmol/");
+  jmolInitialize("/deps/jmol/");
  </script>
 </head>
 <body>

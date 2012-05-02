@@ -4,6 +4,6 @@ See http://www.mkyong.com/maven/download-standard-jar-taglib-from-maven/
 
 Things that need to be done after getting the source code. This list should
 attempt to be trimmed where possible.
-- Download jmol and place it in /applets/
+- Download jmol and place it in /deps/
 - Download NAccess and place it in model/deps 
 - Download NetOGlyc and place it in model/deps

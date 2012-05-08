@@ -5,6 +5,7 @@
 #include <exception>
 #include <iostream>
 #include <fstream>
+#include <stdexcept>
 #include <string>
 
 #include "gmml/gmml.h"
@@ -21,105 +22,7 @@ using std::endl;
 
 using molecular_dynamics::glycan_builder::BuildInfo;
 
-/*
-using molecular_dynamics::glycoprotein_builder::CYSPair;
-using molecular_dynamics::glycoprotein_builder::GlycosylationInfo;
-using molecular_dynamics::glycoprotein_builder::GlycosylationSpot;
-using molecular_dynamics::glycoprotein_builder::PdbInfo;
-using molecular_dynamics::glycoprotein_builder::PdbMapping;
-using molecular_dynamics::glycoprotein_builder::PdbModificationInfo;
-using molecular_dynamics::glycoprotein_builder::PdbResidueInfo;
-*/
-
 using namespace pdb;
-
-/*
-const char *kHeadMap[] = {
-  "ALA", "NALA",
-  "ARG", "NARG",
-  "ASN", "NASN",
-  "ASP", "NASP",
-  "CYS", "NCYS",
-  "CYX", "NCYX",
-  "GLN", "NGLN",
-  "GLU", "NGLU",
-  "GLY", "NGLY",
-  "HID", "NHID",
-  "HIE", "NHIE",
-  "HIP", "NHIP",
-  "ILE", "NILE",
-  "LEU", "NLEU",
-  "LYS", "NLYS",
-  "MET", "NMET",
-  "PHE", "NPHE",
-  "PRO", "NPRO",
-  "SER", "NSER",
-  "THR", "NTHR",
-  "TRP", "NTRP",
-  "TYR", "NTYR",
-  "VAL", "NVAL",
-  "HIS", "NHIS",
-  "GUA", "DG5",
-  "ADE", "DA5",
-  "CYT", "DC5",
-  "THY", "DT5",
-  "G", "RG5",
-  "A", "RA5",
-  "C", "RC5",
-  "U", "RU5",
-  "DG", "DG5",
-  "DA", "DA5",
-  "DC", "DC5",
-  "DT", "DT5"
-};
-
-const char *kTailMap[] = {
-  "ALA", "CALA",
-  "ARG", "CARG",
-  "ASN", "CASN",
-  "ASP", "CASP",
-  "CYS", "CCYS",
-  "CYX", "CCYX",
-  "GLN", "CGLN",
-  "GLU", "CGLU",
-  "GLY", "CGLY",
-  "HID", "CHID",
-  "HIE", "CHIE",
-  "HIP", "CHIP",
-  "ILE", "CILE",
-  "LEU", "CLEU",
-  "LYS", "CLYS",
-  "MET", "CMET",
-  "PHE", "CPHE",
-  "PRO", "CPRO",
-  "SER", "CSER",
-  "THR", "CTHR",
-  "TRP", "CTRP",
-  "TYR", "CTYR",
-  "VAL", "CVAL",
-  "HIS", "CHIS",
-  "GUA", "DG3",
-  "ADE", "DA3",
-  "CYT", "DC3",
-  "THY", "DT3",
-  "G", "RG3",
-  "A", "RA3",
-  "C", "RC3",
-  "U", "RU3",
-  "DG", "DG3",
-  "DA", "DA3",
-  "DC", "DC3",
-  "DT", "DT3"
-};
-*/
-
-const char *kResidueMap[] = {
-  "HIS", "HIE",
-};
-
-#ifndef ARRAY_SIZE
-#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
-#endif
 
 GlycoproteinBuildInfo *read_build_info(char *file) {
     GlycoproteinBuildInfo *build_info = new GlycoproteinBuildInfo;
@@ -132,16 +35,15 @@ GlycoproteinBuildInfo *read_build_info(char *file) {
     return build_info;
 }
 
-int main(int argc, char *argv[]) {
-    gmml::add_path(std::string(PROJECT_ROOT) + "dat/");
-    
+// This should be in a different file.
+void load_files() {
+    add_path(string(PROJECT_ROOT) + "dat/");
+
     load_prep_file("prep_files/GLYCAM_06h.prep");
     load_prep_file("prep_files/HOH.prep");
 
-
     load_parameter_file("param_files/parm99.dat");
     load_parameter_file("param_files/GLYCAM_06h.dat");
-
 
     load_library_file("library_files/all_amino94.lib");
     load_library_file("library_files/all_aminoct94.lib");
@@ -151,329 +53,328 @@ int main(int argc, char *argv[]) {
     load_library_file("library_files/GLYCAM_aminoct_06h.lib");
     load_library_file("library_files/GLYCAM_aminont_06h.lib");
     load_library_file("library_files/tip3pbox.off");
+}
 
+PdbResidueId get_pdb_id(const PdbResidueInfo& info) {
+    return PdbResidueId(info.chain_id()[0], info.res_num(), info.i_code()[0]);
+}
 
-    load_amino_acid_mappings();
-
-    //for (int i = 0; i < ARRAY_SIZE(kHeadMap); i += 2) {
-    //    add_head_mapping(kHeadMap[i], kHeadMap[i + 1]);
-    //}
-
-    //for (int i = 0; i < ARRAY_SIZE(kTailMap); i += 2) {
-    //    add_tail_mapping(kTailMap[i], kTailMap[i + 1]);
-    //}
-
-    for (int i = 0; i < ARRAY_SIZE(kResidueMap); i += 2) {
-        add_residue_mapping(kResidueMap[i], kResidueMap[i + 1]);
+class CreatePdbStructure {
+  public:
+    explicit CreatePdbStructure(const GlycoproteinBuildInfo *build_info)
+            : build_info_(build_info),
+              preprocessing_results_(&build_info->preprocessing_results()),
+              pdb_file_(new PdbFile(File(build_info->pdb_file()))),
+              builder_(*pdb_file_) {
+        builder_.use_residue_map();
     }
 
-    if (argc < 2) {
+    ~CreatePdbStructure() {
+        delete pdb_file_;
+    }
+
+    PdbFileStructure *operator()() {
+        initialize_builder();
+        return builder_.build();
+    }
+
+  private:
+    void initialize_builder() {
+        add_residues_to_remove();
+        add_his_mappings();
+        add_cys_bond_mappings();
+        add_chain_mappings();
+        add_gap_mappings();
+        add_glycosylation_mappings();
+    }
+
+    void add_residues_to_remove() {
+        for (int i = 0; i < preprocessing_results_->residue_to_remove_size();
+                i++) {
+            const PdbResidueInfo& info =
+                    preprocessing_results_->residue_to_remove(i);
+            PdbResidueId pdb_id = get_pdb_id(info);
+            builder_.add_residue_to_remove(&pdb_id);
+        } 
+    }
+
+    void add_his_mappings() {
+        for (int i = 0; i < preprocessing_results_->his_mapping_size(); i++) {
+            const PdbMapping& mapping = preprocessing_results_->his_mapping(i);
+            PdbResidueId pdb_id = get_pdb_id(mapping.residue());
+            builder_.add_mapping(pdb_id, mapping.mapped_name());
+        }
+    }
+
+    void add_cys_bond_mappings() {
+        for (int i = 0; i < preprocessing_results_->close_cys_pair_size();
+                i++) {
+            const CYSPair& pair = preprocessing_results_->close_cys_pair(i);
+            const PdbResidueInfo& first = pair.cys1();
+            const PdbResidueInfo& second = pair.cys2();
+            string mapped_name = (pair.bonded())?"CYX":"CYS";
+            builder_.add_mapping(get_pdb_id(first), mapped_name);
+            builder_.add_mapping(get_pdb_id(second), mapped_name);
+        }
+    }
+
+    void add_chain_mappings() {
+        for (int i = 0; i < preprocessing_results_->chain_info_size(); i++) {
+            add_chain_mappings(preprocessing_results_->chain_info(i));
+        }
+    }
+
+    void add_chain_mappings(const ChainInfo& chain_info) {
+        add_nterminal_mapping(chain_info.start(), chain_info.nterminal_type());
+        add_cterminal_mapping(chain_info.end(), chain_info.cterminal_type());
+    }
+
+    void add_nterminal_mapping(const PdbResidueInfo& residue,
+                               NTerminalType type) {
+        PdbResidueId pdb_id = get_pdb_id(residue);
+        string mapped_name = builder_.map_pdb_residue(&pdb_id, residue.name(),
+                                                      false, false);
+        if (type == NH3) {
+            mapped_name = "N" + mapped_name;
+        }
+        builder_.add_mapping(pdb_id, mapped_name);
+    }
+
+    void add_cterminal_mapping(const PdbResidueInfo& residue,
+                               CTerminalType type) {
+        PdbResidueId pdb_id = get_pdb_id(residue);
+        string mapped_name = builder_.map_pdb_residue(&pdb_id, residue.name(),
+                                                      false, false);
+        if (type == CO2) {
+            mapped_name = "C" + mapped_name;
+        }
+        builder_.add_mapping(pdb_id, mapped_name);
+    }
+
+    void add_gap_mappings() {
+        for (int i = 0; i < preprocessing_results_->chain_gap_size(); i++) {
+            add_gap_mappings(preprocessing_results_->chain_gap(i));
+        }
+    }
+
+    void add_gap_mappings(const ChainGap& chain_gap) {
+        add_cterminal_mapping(chain_gap.start(), chain_gap.cterminal_type());
+        add_nterminal_mapping(chain_gap.end(), chain_gap.nterminal_type());
+    }
+
+    void add_glycosylation_mappings() {
+        for (int i = 0; i < build_info_->glycosylation_size(); i++) {
+            const GlycosylationInfo& info = build_info_->glycosylation(i);
+            const GlycosylationSpot& spot = info.spot();
+            const PdbResidueInfo& residue_info = spot.info();
+            if (spot.name() == "ASN") {
+                builder_.add_mapping(get_pdb_id(residue_info), "NLN");
+            }
+        }
+    }
+
+    PdbFile *pdb_file_;
+    const GlycoproteinBuildInfo *build_info_;
+    const PreprocessingResults *preprocessing_results_;
+    PdbStructureBuilder builder_;
+};
+
+class CreateGlycoprotein {
+  public:
+    CreateGlycoprotein(PdbFileStructure *structure,
+                       GlycoproteinBuildInfo *build_info)
+            : structure_(structure), build_info_(build_info),
+              preprocessing_results_(&build_info_->preprocessing_results()) {}
+
+    void operator()() {
+        add_or_remove_cys_bonds();
+        add_chain_caps();
+        add_gap_caps();
+    }
+
+  private:
+    void add_or_remove_cys_bonds() {
+        for (int i = 0; i < preprocessing_results_->close_cys_pair_size();
+                i++) {
+            add_or_remove_cys_bond(preprocessing_results_->close_cys_pair(i));
+        }
+    }
+
+    void add_or_remove_cys_bond(const CYSPair& cys_pair) {
+        int sulfur1 = get_cys_sulfur_index(cys_pair.cys1());
+        int sulfur2 = get_cys_sulfur_index(cys_pair.cys2());
+        if (sulfur1 == -1 || sulfur2 == -1) {
+            throw std::invalid_argument("Could not find sulfur atom in CYS.");
+        }
+        if (cys_pair.bonded()) {
+            structure_->add_bond(sulfur1, sulfur2);
+        } else {
+            structure_->remove_bond(sulfur1, sulfur2);
+        }
+    }
+
+    int get_cys_sulfur_index(const PdbResidueInfo& residue) {
+        PdbResidueId pdb_id = get_pdb_id(residue);
+        int residue_index = structure_->map_residue(pdb_id);
+        if (residue_index == -1) {
+            throw std::invalid_argument("Invalid Pdb Residue Id.");
+        }
+        return structure_->get_atom_index(residue_index, "SG");
+    }
+
+    void add_chain_caps() {
+        for (int i = 0; i < preprocessing_results_->chain_info_size(); i++) {
+            add_chain_caps(preprocessing_results_->chain_info(i));
+        }
+    }
+
+    void add_chain_caps(const ChainInfo& chain_info) {
+        attach_nterminal_cap(chain_info.start(),
+                             chain_info.nterminal_type());
+        attach_cterminal_cap(chain_info.end(),
+                             chain_info.cterminal_type());
+    }
+
+    void add_gap_caps() {
+        for (int i = 0; i < preprocessing_results_->chain_gap_size(); i++) {
+            add_gap_caps(preprocessing_results_->chain_gap(i));
+        }
+    }
+
+    void add_gap_caps(const ChainGap& gap) {
+        attach_cterminal_cap(gap.start(), gap.cterminal_type());
+        attach_nterminal_cap(gap.end(), gap.nterminal_type());
+    }
+
+    void attach_nterminal_cap(const PdbResidueInfo& residue,
+                              NTerminalType type) {
+        if (type != COCH3) {
+            return;
+        }
+        PdbResidueId pdb_id = get_pdb_id(residue);
+        int residue_index = structure_->map_residue(pdb_id);
+        if (is_already_capped(residue_index, "N")) {
+            return;
+        }
+        Structure *cap = build_nterminal_cap(type);
+        structure_->set_tail(residue_index, "N");
+        structure_->attach(cap);
+        delete cap;
+    }
+
+    void attach_cterminal_cap(const PdbResidueInfo& residue,
+                              CTerminalType type) {
+        if (type != NHCH3 && type != NH2) {
+            return;
+        }
+        PdbResidueId pdb_id = get_pdb_id(residue);
+        int residue_index = structure_->map_residue(pdb_id);
+        if (is_already_capped(residue_index, "C")) {
+            return;
+        }
+        Structure *cap = build_cterminal_cap(type);
+        structure_->set_tail(residue_index, "C");
+        structure_->attach(cap);
+        delete cap;
+    }
+
+    bool is_already_capped(int residue_index, const string& atom_name) {
+        int atom_index = structure_->get_atom_index(residue_index, atom_name);
+
+        if (atom_index == -1) {
+            throw std::invalid_argument("Atom not in residue.");
+        }
+
+        const Structure::AdjList& adj_atoms = structure_->bonds(atom_index);
+
+        for (int i = 0; i < adj_atoms.size(); i++) {
+            if (structure_->get_residue_index(adj_atoms[i]) != residue_index) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    Structure *build_nterminal_cap(NTerminalType type) {
+        if (type == COCH3) {
+            Structure *cap = build("ACE");
+            cap->set_head(0, "C");
+            return cap;
+        }
+        throw std::invalid_argument("Not a valid N-Terminal cap.");
+    }
+
+    Structure *build_cterminal_cap(CTerminalType type) {
+        Structure *cap = NULL;
+        if (type == NHCH3) {
+            cap = build("NME");
+        } else if (type == NH2) {
+            cap = build("NHE");
+        } else {
+            throw std::invalid_argument("Not a valid C-Terminal cap.");
+        }
+        cap->set_head(0, "N");
+        return cap;
+    }
+
+    PdbFileStructure *structure_;
+    const GlycoproteinBuildInfo *build_info_;
+    const PreprocessingResults *preprocessing_results_;
+};
+
+void check_for_unknown_residues_and_atoms(
+        const PdbMappingResults& mapping_results) {
+    bool unknown = false;
+
+    for (int i = 0; i < mapping_results.unknown_residue_count(); i++) {
+        unknown = true;
+        const PdbResidueId *pdb_id = mapping_results.get_unknown_residue(i);
+        cerr << "Unknown residue " << pdb_id->chain_id << " " <<
+                pdb_id->res_num << " " + pdb_id->i_code << "." << endl;
+    }
+
+    for (int i = 0; i < mapping_results.unknown_atom_count(); i++) {
+        unknown = true;
+        int atom_index = mapping_results.get_unknown_atom(i);
+        cerr << "Unknown atom " << atom_index << "." << endl;
+    }
+
+    if (unknown) {
+        throw std::logic_error("One or more unknown atoms or residues.");
+    }
+}
+
+void print_files(const PdbFileStructure *structure) {
+    structure->print_pdb_file("structure.pdb");
+    structure->print_amber_top_file("structure.top");
+    structure->print_coordinate_file("structure.rst");
+}
+
+int main(int argc, char *argv[]) {
+    load_files();
+    load_amino_acid_mappings();
+
+    if (argc != 2) {
+        cerr << "Command expects one argument." << endl;
         return -1;
     }
 
-cout << "reading build info" << endl;
     GlycoproteinBuildInfo *build_info = read_build_info(argv[1]);
-cout << "done reading" << endl;
-
-cout << "getting preprocessing results" << endl;
-    const PreprocessingResults& preprocessing_results =
-            build_info->preprocessing_results();
-cout << "done" << endl;
-
-cout << "reading pdb " << build_info->pdb_file() << endl;
-    PdbFile pdb(File(build_info->pdb_file()));
-cout << "done" << endl;
-
-    PdbStructureBuilder builder(pdb);
-    builder.use_residue_map();
-
-    cout << "residues to remove: " << preprocessing_results.residue_to_remove_size() << endl;
-    for (int i = 0; i < preprocessing_results.residue_to_remove_size(); i++) {
-        const PdbResidueInfo& info = preprocessing_results.residue_to_remove(i);
-        PdbResidueId id(info.chain_id()[0], info.res_num(), info.i_code()[0]);
-        cout << "removed residue " << id.chain_id << " " << id.res_num << " " << id.i_code << endl;
-        builder.add_residue_to_remove(&id);
+    if (build_info == NULL) {
+        cerr << "Unable to read protocol buffer." << endl;
+        return -1;
     }
 
-    cout << "his mappings: " << preprocessing_results.his_mapping_size() << endl;
-    for (int i = 0; i < preprocessing_results.his_mapping_size(); i++) {
-        const PdbMapping& mapping = preprocessing_results.his_mapping(i);
-        const PdbResidueInfo& info = mapping.residue();
-        builder.add_mapping(PdbResidueId(info.chain_id()[0], info.res_num(),
-                            info.i_code()[0]), mapping.mapped_name());
-    }
+    PdbFileStructure *structure = CreatePdbStructure(build_info)();
 
-    for (int i = 0; i < preprocessing_results.close_cys_pair_size(); i++) {
-        const CYSPair& pair = preprocessing_results.close_cys_pair(i);
-        const PdbResidueInfo& first = pair.cys1();
-        const PdbResidueInfo& second = pair.cys2();
-        std::string mapped_name = (pair.bonded())?"CYX":"CYS";
-        builder.add_mapping(PdbResidueId(first.chain_id()[0], first.res_num(),
-                            first.i_code()[0]), mapped_name);
-        builder.add_mapping(PdbResidueId(second.chain_id()[0], second.res_num(),
-                            second.i_code()[0]), mapped_name);
-    }
+    CreateGlycoprotein(structure, build_info)();
 
-    for (int i = 0; i < preprocessing_results.residue_to_remove_size(); i++) {
-        const PdbResidueInfo& residue = preprocessing_results.residue_to_remove(i);
-        PdbResidueId pdb_id(residue.chain_id()[0], residue.res_num(), residue.i_code()[0]);
-        builder.add_residue_to_remove(&pdb_id);
-    }
+    check_for_unknown_residues_and_atoms(*structure->get_mapping_results());
 
+    // Remove this line when the stuff below is gone.
+    const PreprocessingResults& preprocessing_results = build_info->preprocessing_results();
 
-    for (int i = 0; i < preprocessing_results.chain_info_size(); i++) {
-        const ChainInfo& chain_info = preprocessing_results.chain_info(i);
-        const PdbResidueInfo& start = chain_info.start();
-        PdbResidueId dd(start.chain_id()[0], start.res_num(), start.i_code()[0]);
-
-        if (chain_info.nterminal_type() == COCH3) {
-//            bool already_capped = (start.name() == "ACE");
-//            if (!already_capped) {
-              PdbResidueId cc(start.chain_id()[0], start.res_num(), start.i_code()[0]);
-              string cur_mapped_name = builder.map_pdb_residue(&cc, start.name(), false, false);
-              builder.add_mapping(cc, cur_mapped_name);
-               cout << "adding a mapping to " << cur_mapped_name << endl;
-//            }
-        } else if (chain_info.nterminal_type() == NH3) {
-            string name = start.name();
-            if (name == "HIS") {
-                PdbResidueId cc(start.chain_id()[0], start.res_num(), start.i_code()[0]);
-                name = "N" + builder.map_pdb_residue(&cc, "HIS", false, false);
-            } else if (name == "CYS") {
-                name = "N" + builder.map_pdb_residue(&dd, "CYS", false, false);
-            } else {
-                name = "N" + name;
-            }
-            builder.add_mapping(PdbResidueId(start.chain_id()[0], start.res_num(), start.i_code()[0]),
-                                name);
-            cout << "adding a mapping to " << name << endl;
-            
-        }
-
-        const PdbResidueInfo& end = chain_info.end();
-        PdbResidueId cc(end.chain_id()[0], end.res_num(), end.i_code()[0]);
-        if (chain_info.cterminal_type() == NH2 || chain_info.cterminal_type() == NHCH3) {
-//            bool already_capped = (end.name() == "NME" || end.name() == "NHE");
-//            if (!already_capped) {
-                string cur_mapped_name = builder.map_pdb_residue(&cc, end.name(), false, false);
-                builder.add_mapping(cc, cur_mapped_name);
-//            }
-        } else if (chain_info.cterminal_type() == CO2) {
-            string name = end.name();
-            if (name == "HIS") {
-                name = "C" + builder.map_pdb_residue(&cc, "HIS", false, false);
-            } else if (name == "CYS") {
-                name = "C" + builder.map_pdb_residue(&cc, "CYS", false, false);
-            } else {
-                name = "C" + name;
-            }
-            builder.add_mapping(PdbResidueId(end.chain_id()[0], end.res_num(), end.i_code()[0]),
-                                name);;
-        }
-    }
-
-    for (int i = 0; i < preprocessing_results.chain_gap_size(); i++) {
-        const ChainGap& chain_gap = preprocessing_results.chain_gap(i);
-
-        const PdbResidueInfo& start = chain_gap.start();
-        PdbResidueId cc(start.chain_id()[0], start.res_num(), start.i_code()[0]);
-        if (chain_gap.cterminal_type() == NH2 || chain_gap.cterminal_type() == NHCH3) {
-            string cur_mapped_name = builder.map_pdb_residue(&cc, start.name(), false, false);
-            builder.add_mapping(cc, cur_mapped_name);
-        } else if (chain_gap.cterminal_type() == CO2) {
-            string name = start.name();
-            if (name == "HIS") {
-                name = "C" + builder.map_pdb_residue(&cc, "HIS", false, false);
-            } else {
-                name = "C" + name;
-            }
-            builder.add_mapping(PdbResidueId(start.chain_id()[0], start.res_num(), start.i_code()[0]),
-                                name);;
-        }
-
-
-
-
-
-        const PdbResidueInfo& end = chain_gap.end();
-
-        if (chain_gap.nterminal_type() == COCH3) {
-            PdbResidueId cc(end.chain_id()[0], end.res_num(), end.i_code()[0]);
-            string cur_mapped_name = builder.map_pdb_residue(&cc, end.name(), false, false);
-            builder.add_mapping(cc, cur_mapped_name);
-            cout << "adding a mapping to " << cur_mapped_name << endl;
-        } else if (chain_gap.nterminal_type() == NH3) {
-            string name = end.name();
-            if (name == "HIS") {
-                PdbResidueId cc(end.chain_id()[0], end.res_num(), end.i_code()[0]);
-                name = "N" + builder.map_pdb_residue(&cc, "HIS", false, false);
-            } else {
-                name = "N" + name;
-            }
-            builder.add_mapping(PdbResidueId(end.chain_id()[0], end.res_num(), end.i_code()[0]),
-                                name);
-            cout << "adding a mapping to " << name << endl;
-
-        }
-
-
-
-
-
-    }
-
-    for (int i = 0; i < build_info->glycosylation_size(); i++) {
-        const GlycosylationInfo& info = build_info->glycosylation(i);
-        const GlycosylationSpot& spot = info.spot();
-        const PdbResidueInfo& residue_info = spot.info();
-        if (spot.name() == "ASN") {
-            builder.add_mapping(PdbResidueId(residue_info.chain_id()[0],
-                                residue_info.res_num(),
-                                residue_info.i_code()[0]),
-                                "NLN");
-        }
-    }
-
-    PdbResidueId xx('C', 87);
-    cout << "mapping C 87 to " <<  builder.map_pdb_residue(&xx, "PRO", true, false) << endl;
-
-    PdbFileStructure *structure = builder.build();
-
-    const PdbMappingResults *mapping_results = structure->get_mapping_results();
-    for (int i = 0; i < mapping_results->unknown_residue_count(); i++) {
-        const PdbResidueId *pdb_id = mapping_results->get_unknown_residue(i);
-        cout << "Unknown residue " << pdb_id->chain_id << " " << pdb_id->res_num << " " <<
-                pdb_id->i_code << " " << structure->residues(*pdb_id)->name() << endl;
-    }
-
-    for (int i = 0; i < mapping_results->unknown_atom_count(); i++) {
-        int index = mapping_results->get_unknown_atom(i);
-        cout << "unknown atom: " << index << endl;
-    }
-
-    for (int i = 0; i < preprocessing_results.chain_info_size(); i++) {
-        const ChainInfo& chain_info = preprocessing_results.chain_info(i);
-
-        const PdbResidueInfo& start = chain_info.start();
-        if (chain_info.nterminal_type() == COCH3) {
-            int index = structure->map_residue(PdbResidueId(start.chain_id()[0],
-                                               start.res_num(),
-                                               start.i_code()[0]));
-            int n_index = structure->get_atom_index(index, "N");
-            const Structure::AdjList& adj_atoms = structure->bonds(n_index);
-
-            bool is_already_capped = false;
-            for (int j = 0; j < adj_atoms.size(); j++) {
-                if (structure->get_residue_index(adj_atoms[j]) != index) {
-                    is_already_capped = true;
-                    break;
-                }
-            }
-            if (!is_already_capped) {
-
-                structure->set_tail(index, "N");
-                cout << "attaching an ACE to " << index << endl;
-                Structure *t = build("ACE");
-                if (t == NULL) 
-                    cout << "NO ACE!!!" << endl;
-                t->set_head(0, "C");
-                int new_index = structure->attach(t);
-                cout << "ACE index is " << new_index << endl;
-            }
-        }
-
-        const PdbResidueInfo& end = chain_info.end();
-
-        int tail_residue = structure->map_residue(PdbResidueId(end.chain_id()[0],
-                                                               end.res_num(),
-                                                               end.i_code()[0]));
-
-            int c_index = structure->get_atom_index(tail_residue, "C");
-            const Structure::AdjList& adj_atoms = structure->bonds(c_index);
-            bool is_already_capped = false;
-            for (int j = 0; j < adj_atoms.size(); j++) {
-                if (structure->get_residue_index(adj_atoms[j]) != tail_residue) {
-                    is_already_capped = true;
-                    break;
-                }
-            }
-            if (is_already_capped) continue;
-
-
-
-        structure->set_tail(tail_residue, "C");
-        if (chain_info.cterminal_type() == NHCH3) {
-            Structure *nme = build("NME");
-            if (nme == NULL)
-                  cout << "NO NME" << endl;
-            nme->set_head(0, "N");
-            int index = structure->attach(nme);
-            cout << "new NME index is " << index << endl;
-        } else if (chain_info.cterminal_type() == NH2 && end.name() != "NHE") {
-            Structure *nhe = build("NHE");
-            if (nhe == NULL)
-                  cout << "NO NHE" << endl;
-            nhe->set_head(0, "N");
-            int index = structure->attach(nhe);
-            cout << "new NHE index is " << index << endl;
-        }
-    }
-
-    for (int i = 0; i < preprocessing_results.chain_gap_size(); i++) {
-        const ChainGap& chain_gap = preprocessing_results.chain_gap(i);
-
-        const PdbResidueInfo& start = chain_gap.start();
-
-        int tail_residue = structure->map_residue(PdbResidueId(start.chain_id()[0],
-                                                               start.res_num(),
-                                                               start.i_code()[0]));
-        structure->set_tail(tail_residue, "C");
-        if (chain_gap.cterminal_type() == NHCH3) {
-            Structure *nme = build("NME");
-            nme->set_head(0, "N");
-            int index = structure->attach(nme);
-        } else if (chain_gap.cterminal_type() == NH2) {
-            Structure *nhe = build("NHE");
-            nhe->set_head(0, "N");
-            int index = structure->attach(nhe);
-        }
-
-
-
-        const PdbResidueInfo& end = chain_gap.end();
-
-        if (chain_gap.nterminal_type() == COCH3) {
-            int index = structure->map_residue(PdbResidueId(end.chain_id()[0],
-                                               end.res_num(),
-                                               end.i_code()[0]));
-            structure->set_tail(index, "N");
-            Structure *t = build("ACE");
-            t->set_head(0, "C");
-            int new_index = structure->attach(t);
-        }
-
-    }
-
-
-    for (int i = 0; i < preprocessing_results.close_cys_pair_size(); i++) {
-        const CYSPair& pair = preprocessing_results.close_cys_pair(i);
-        const PdbResidueInfo& first = pair.cys1();
-        const PdbResidueInfo& second = pair.cys2();
-        int cys1_index = structure->map_residue(PdbResidueId(first.chain_id()[0],
-                                                first.res_num(),
-                                                first.i_code()[0]));
-        int cys2_index = structure->map_residue(PdbResidueId(second.chain_id()[0],
-                                                second.res_num(),
-                                                second.i_code()[0]));
-        int atom1 = structure->get_atom_index(cys1_index, "SG");
-        int atom2 = structure->get_atom_index(cys2_index, "SG");
-        if (pair.bonded()) {
-            structure->add_bond(atom1, atom2);
-        } else {
-            structure->remove_bond(atom1, atom2);
-        }
-    }
-
+    // This should be moved to the class above and modified.
     for (int i = 0; i < build_info->glycosylation_size(); i++) {
         const GlycosylationInfo& info = build_info->glycosylation(i);
         const PdbResidueInfo& spot_info = info.spot().info();
@@ -516,14 +417,7 @@ cout << "done" << endl;
         }
     }
 
-    cout << "writing pdb " << endl;
-
-    structure->print_pdb_file("structure.pdb");
-
-    cout << "done writing pdb" << endl;
-
-    structure->print_amber_top_file("structure.top");
-    structure->print_coordinate_file("structure.rst");
+    print_files(structure);
 
     return 0;
 }

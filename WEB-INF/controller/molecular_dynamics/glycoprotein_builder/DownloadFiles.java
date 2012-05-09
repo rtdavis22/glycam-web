@@ -27,13 +27,16 @@ import javax.servlet.annotation.WebServlet;
 public class DownloadFiles extends HttpServlet {
     private enum DownloadType { ZIP, TARGZ }
 
-    private static final File OUTPUT_DIRECTORY =
-            new File("/opt/apache-tomcat-7.0.27/webapps/ROOT/userdata/tools/mdfiles/");
+    private static final String RELATIVE_OUTPUT_PATH = "/userdata/tools/mdfiles/";
+
+    private File getAbsoluteOutputPath(String uid) {
+        return new File(getServletContext().getRealPath(RELATIVE_OUTPUT_PATH), uid);
+    }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String uuid = request.getParameter("uuid");
-        File outputDirectory = new File(OUTPUT_DIRECTORY, uuid);
+        File outputDirectory = getAbsoluteOutputPath(uuid);
         String filesToDownload = "structure.*";
 
         DownloadType downloadType = getDownloadType(request);
@@ -78,7 +81,7 @@ public class DownloadFiles extends HttpServlet {
             // This is a unique identifier associated with this build.
             String uuid = UUID.randomUUID().toString();
 
-            File outputDirectory = new File(OUTPUT_DIRECTORY, uuid);
+            File outputDirectory = getAbsoluteOutputPath(uuid);
             buildRequest = glycoproteinSession.build(outputDirectory, uuid);
         }
 

@@ -30,9 +30,11 @@ import javax.servlet.http.HttpSession;
 public class DownloadFiles extends HttpServlet {
     private enum DownloadType { ZIP, TARGZ, PDB }
 
-    // TODO: Set this in web.xml or something.
-    private static final File OUTPUT_DIRECTORY =
-            new File("/opt/apache-tomcat-7.0.27/webapps/ROOT/userdata/tools/mdfiles/");
+    private static final String RELATIVE_OUTPUT_PATH = "/userdata/tools/mdfiles/";
+
+    private File getAbsoluteOutputPath(String uid) {
+        return new File(getServletContext().getRealPath(RELATIVE_OUTPUT_PATH), uid);
+    }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -92,8 +94,7 @@ public class DownloadFiles extends HttpServlet {
     }
 
     private File getOutputDirectory(HttpServletRequest request) {
-        String uid = getRequestUID(request);
-        return new File(OUTPUT_DIRECTORY, uid);
+        return getAbsoluteOutputPath(getRequestUID(request));
     }
 
     private String getRequestUID(HttpServletRequest request) {
@@ -133,12 +134,11 @@ public class DownloadFiles extends HttpServlet {
     }
 
     private void buildGlycanSession(GlycanSession glycanSession) {
-        String uid = getUID();
-        File outputDirectory = new File(OUTPUT_DIRECTORY, uid);
+        File outputDirectory = getAbsoluteOutputPath(getNewUID());
         glycanSession.build(outputDirectory);
     }
 
-    private String getUID() {
+    private String getNewUID() {
         return UUID.randomUUID().toString();
     }
 

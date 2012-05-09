@@ -51,6 +51,7 @@ JFLAGS = -classpath $(CLASSPATH)
 all: $(JAVA_FILES) $(JAR_FILES)
 	$(MAKE) -C model
 	cp model/lib/glycam-web.jar lib
+	cp model/deps/protobuf/java/target/protobuf-java-2.4.2-pre.jar lib
 	rm -rf classes/controller
 	mkdir -p classes
 	javac $(JFLAGS) -d classes $(JAVA_FILES)

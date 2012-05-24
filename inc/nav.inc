@@ -1,12 +1,12 @@
 
-<a href="/"><img src="/img/logo.jpg" alt="GLYCAM logo" /></a>
+<a href="/"><img src="/img/logo.jpg"  alt="GLYCAM logo" /></a>
 <div id="nav">
 <ul class="menu" id="menu">
  <li>
   <a href="#" class="menulink">About</a>
   <ul>
    <li>
-    <a href="#">Woods Group</a>
+    <a href="/about.jsp">Woods Group</a>
    </li>
   </ul>
  </li>

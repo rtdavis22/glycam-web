@@ -16,15 +16,18 @@
   <div id="home">
    <div id="tools">
      <h3>Tools</h3>
-     <a href="/tools/molecular-dynamics/oligosaccharide-builder/build-glycan">
-      <img src="/img/md.png" />
-     </a>
-     <a href="/tools/molecular-dynamics/glycoprotein-builder/upload-pdb">
-      <img src="#" />
-     </a>
-     <img src="#" />
-     <img src="#" />
-     <img src="#" />
+     <div style="display:inline-block;margin:10px;">
+      <a href="/tools/molecular-dynamics/oligosaccharide-builder/build-glycan">
+       <img src="/img/md.png" />
+      </a>
+      <p style="font-weight:bold">Oligosaccharide Builder</p>
+     </div>
+     <div style="display:inline-block;margin:10px;">
+      <a href="/tools/molecular-dynamics/glycoprotein-builder/upload-pdb">
+       <img src="/img/md.png" />
+      </a>
+      <p style="font-weight:bold">Glycoprotein Builder</p>
+     </div>
      <br />
     <a href="/tools"><span>More info</span></a>
    </div>

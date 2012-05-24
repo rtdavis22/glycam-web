@@ -1,7 +1,3 @@
-Note: standard.jar and jstl.jar were placed in the servlets lib dir.
-Preferably, I think, they would be fetched at build time from the web.
-See http://www.mkyong.com/maven/download-standard-jar-taglib-from-maven/
-
 Things that need to be done after getting the source code. This list should
 attempt to be trimmed where possible.
 - Download jmol and place it in /deps/

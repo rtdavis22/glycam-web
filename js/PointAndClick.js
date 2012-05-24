@@ -1,3 +1,5 @@
+// Note(Robert): This file is currently being rewritten.
+
 var PointAndClick = PointAndClick || {};
 
 // Fields:

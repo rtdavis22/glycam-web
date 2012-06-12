@@ -1,3 +1,7 @@
+// Note(Robert): This file, which goes with /inc/nav.inc, was found on the web
+// somewhere. I don't remember where, but it was advertised as free to use and
+// didn't come with a license.
+
 var menu=function(){
         var t=15,z=50,s=6,a;
         function dd(n){this.n=n; this.h=[]; this.c=[]}

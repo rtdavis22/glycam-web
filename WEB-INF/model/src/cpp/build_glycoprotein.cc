@@ -379,7 +379,11 @@ int main(int argc, char *argv[]) {
         const GlycosylationInfo& info = build_info->glycosylation(i);
         const PdbResidueInfo& spot_info = info.spot().info();
         const BuildInfo& glycan_info = info.glycan();
-        Structure *glycan = glycam_build_without_aglycon(glycan_info.glycan());
+        //Structure *glycan = glycam_build_without_aglycon(glycan_info.glycan());
+        Structure *glycan = glycam_build(glycan_info.glycan());
+        glycan->minimize("min.in");
+        glycan->remove_residue(0);
+        glycan->set_head(0, glycan->residues(0)->atoms(glycan->residues(0)->head())->name());
         int spot_index = structure->map_residue(PdbResidueId(spot_info.chain_id()[0],
                                                 spot_info.res_num(),
                                                 spot_info.i_code()[0]));
@@ -401,7 +405,7 @@ int main(int argc, char *argv[]) {
         }
         if (tail_atom != -1) {
             int new_res = structure->attach_from_head(glycan, tail_atom);
-            
+
             // Psi
             structure->set_dihedral(spot_index, "CB",
                                     spot_index, "CG",

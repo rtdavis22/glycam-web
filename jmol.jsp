@@ -8,7 +8,7 @@
 %>
 
 <head>
- <script type="text/javascript" src="js/Jmol.js"></script>
+ <script type="text/javascript" src="/deps/jmol/Jmol.js"></script>
  <script type="text/javascript">
   jmolInitialize("/deps/jmol/"); 
  </script>

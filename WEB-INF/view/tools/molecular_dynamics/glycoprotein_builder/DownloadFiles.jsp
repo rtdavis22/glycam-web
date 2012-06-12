@@ -7,7 +7,7 @@
 <head>
  <title>Glycoprotein Builder - Download Files</title>
  <%@ include file="/inc/head.inc" %>
- <script type="text/javascript" src="/js/Jmol.js"></script>
+ <script type="text/javascript" src="/deps/jmol/Jmol.js"></script>
  <script type="text/javascript">
   jmolInitialize("/deps/jmol/");
  </script>

@@ -100,7 +100,6 @@ message CYSPair {
     required bool bonded = 4;
 }
 
-// remove this, its in preprocessinginfo.
 message PdbResidueInfo {
     // This is the index of the residue in the gmml::Structure. It is redundant
     // with the other 3, but both pieces of information may be useful. However,
